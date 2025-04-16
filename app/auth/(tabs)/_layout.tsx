@@ -1,4 +1,4 @@
-import { Tabs } from 'expo-router';
+import { Stack, Tabs } from 'expo-router';
 import { Image, StyleSheet } from 'react-native';
 
 export default function TabLayout() {
@@ -16,7 +16,7 @@ export default function TabLayout() {
                 options={{
                     title: "Pet", tabBarIcon: ({ focused }) => (
                         <Image
-                            source={require('../../assets/images/pet.png')}
+                            source={require('../../../assets/images/pet.png')}
                             style={styles.image}
                         />
                     )
@@ -27,7 +27,7 @@ export default function TabLayout() {
                 options={{
                     title: "Shop", tabBarIcon: ({ focused }) => (
                         <Image
-                            source={require('../../assets/images/shop.png')}
+                            source={require('../../../assets/images/shop.png')}
                             style={styles.image}
                         />
                     )
@@ -38,7 +38,7 @@ export default function TabLayout() {
                 options={{
                     title: "Today's Tasks", tabBarIcon: ({ focused }) => (
                         <Image
-                            source={require('../../assets/images/home.png')}
+                            source={require('../../../assets/images/home.png')}
                             style={styles.image}
                         />
                     )
@@ -49,7 +49,7 @@ export default function TabLayout() {
                 options={{
                     title: "All Tasks", tabBarIcon: ({ focused }) => (
                         <Image
-                            source={require('../../assets/images/tasks.png')}
+                            source={require('../../../assets/images/tasks.png')}
                             style={styles.image}
                         />
                     )
@@ -60,7 +60,7 @@ export default function TabLayout() {
                 options={{
                     title: "Profile", tabBarIcon: ({ focused }) => (
                         <Image
-                            source={require('../../assets/images/profile.png')}
+                            source={require('../../../assets/images/profile.png')}
                             style={styles.image}
                         />
                     )

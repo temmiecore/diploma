@@ -3,14 +3,25 @@ import auth from "@react-native-firebase/auth";
 import { useEffect, useState } from "react";
 import { Task } from "@/helpers/types";
 import { firebase } from '@react-native-firebase/database';
+import { useRouter, useSegments } from "expo-router";
 
 export default function MainPage() {
     const [tasks, setTasks] = useState<Task[]>([]);
+
+    const segments = useSegments();
 
     const database = firebase
         .app()
         .database("https://taskapet-9c229-default-rtdb.europe-west1.firebasedatabase.app/");
 
+    const router = useRouter();
+
+    const isToday = (date: Date) => {
+        const now = new Date();
+        return date.getDate() === now.getDate() &&
+            date.getMonth() === now.getMonth() &&
+            date.getFullYear() === now.getFullYear()
+    }
 
     const fetchTasks = async () => {
         // get tasks from database
@@ -32,7 +43,13 @@ export default function MainPage() {
                 tags: task.tags || [],
                 difficulty: task.difficulty,
                 isCompleted: task.isCompleted || false,
-            }));
+            }))
+            .filter((task: Task) => {
+                const deadline = new Date(task.deadline);
+
+                console.log(isToday(deadline));
+                return isToday(deadline);
+            });
 
             setTasks(fetchedTasks);
         })
@@ -40,15 +57,20 @@ export default function MainPage() {
 
     useEffect(() => {
         fetchTasks();
-    })
+    }, [segments]);
 
     const handleTaskCompletion = (taskId: string) => {
         const userId = auth().currentUser?.uid;
 
         database
             .ref(`/users/${userId}/tasks/${taskId}`)
-            .update({ completed: true });
+            .update({ isCompleted: true });
     }
+
+
+    const handleTaskOpenAddWindow = () => {
+        router.navigate("../addTask");
+    };
 
     const renderTask = ({ item }: { item: Task }) => (
         <View style={styles.taskCard}>
@@ -76,6 +98,12 @@ export default function MainPage() {
                 keyExtractor={item => item.id}
                 ListEmptyComponent={<Text style={{ textAlign: 'center' }}>No tasks for today!</Text>}
             />
+            <TouchableOpacity
+                style={styles.addButton}
+                onPress={handleTaskOpenAddWindow}
+            >
+                <Text style={styles.addButtonText}>+</Text>
+            </TouchableOpacity>
         </View>
     );
 }
@@ -109,4 +137,15 @@ const styles = StyleSheet.create({
         backgroundColor: '#fafafa',
     },
     icon: { width: 32, height: 32 },
+    addButton: {
+        position: "fixed",
+        bottom: 20,
+        backgroundColor: '#4e8cff',
+        paddingHorizontal: 24,
+        borderRadius: 100,
+        alignSelf: "center"
+    },
+    addButtonText: {
+        fontSize: 64
+    }
 });

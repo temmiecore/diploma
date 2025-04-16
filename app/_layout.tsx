@@ -27,10 +27,10 @@ export default function RootLayout() {
     useEffect(() => {
         if (initializing) return;
 
-        const inAuthGroup = segments[0] === "(auth)";
+        const inAuthGroup = segments[0] === "auth";
 
         if (user && !inAuthGroup)
-            router.replace('/(auth)/home');
+            router.replace('/auth/(tabs)/home');
         else
             router.replace('/');
 
@@ -38,7 +38,7 @@ export default function RootLayout() {
 
     useEffect(() => {
         const backAction = () => {
-            const inAuthGroup = segments[0] === '(auth)';
+            const inAuthGroup = segments[0] === 'auth';
 
             if (inAuthGroup)
                 return true;
@@ -75,7 +75,7 @@ export default function RootLayout() {
             <Stack.Screen name="index" options={{ headerShown: false }}/>
             <Stack.Screen name="login" options={{ headerShown: false }}/>
             <Stack.Screen name="signup" options={{ headerShown: false }}/>
-            <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+            <Stack.Screen name="auth" options={{ headerShown: false }} />
         </Stack>
     );
 }
