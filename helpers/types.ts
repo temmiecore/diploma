@@ -10,11 +10,13 @@ export interface Pet {
 }
 
 export interface Task {
+    id: string;
     title: string;
     description: string;
     deadline: string;
     tags: string[];
     difficulty: string;
+    isCompleted: boolean
 }
 
 export interface User {

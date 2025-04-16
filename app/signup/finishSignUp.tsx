@@ -3,6 +3,7 @@ import auth from "@react-native-firebase/auth";
 import { FirebaseError } from "firebase/app";
 import { firebase } from '@react-native-firebase/database';
 import { useUserStore } from "@/helpers/useUserStore";
+import { uid } from 'uid';
 
 export default function finishSignUp() {
     const { user, updateUser } = useUserStore();
@@ -17,18 +18,28 @@ export default function finishSignUp() {
             if (user?.email && user?.password) {
                 const userCredentials = await auth().createUserWithEmailAndPassword(user.email, user.password);
 
-                
+
 
                 // get UID
-                const uid = userCredentials.user.uid;
+                const userId = userCredentials.user.uid;
 
                 const userWithoutPassword = user;
                 delete userWithoutPassword.password;
 
                 // create user in DATABASE
                 database
-                .ref(`/users/${uid}`)
-                .set(userWithoutPassword);
+                    .ref(`/users/${userId}`)
+                    .set(userWithoutPassword);
+
+                // create test tasks (ugh)
+                for (let i = 0; i < 3; i++) {
+                    const taskId: string = uid();
+                    const date: string = new Date().toISOString();
+
+                    database
+                        .ref(`/users/${userId}/tasks/${taskId}`)
+                        .set({ id: taskId, title: "Task Name", description: "Description goes here!", deadline: date, tags: ["important", "school"], difficulty: "Hard", isCompleted: false });
+                }
 
                 console.log("uid: ", uid);
             }

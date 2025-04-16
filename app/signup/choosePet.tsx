@@ -56,14 +56,9 @@ export default function choosePet() {
 
     const handleNext = () => {
         if (selectedPet) {
-            updateUser({ 
-                pet: selectedPet, 
-                tasks: [
-                    {title: "Task 1", description: "Description goes here!", deadline: "Tomorrow", tags: ["important", "school"], difficulty: "Hard"},
-                    {title: "Task 2", description: "Different description goes here!", deadline: "2 Days", tags: ["work"], difficulty: "Medium"},
-                    {title: "Task 3", description: "This one has no description...", deadline: "3 Days", tags: ["school"], difficulty: "Easy"}
-                ]
-             });
+            updateUser({
+                pet: selectedPet,
+            });
             console.log(user);
 
             router.navigate("/signup/finishSignUp");

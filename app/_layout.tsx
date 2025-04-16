@@ -30,9 +30,9 @@ export default function RootLayout() {
         const inAuthGroup = segments[0] === "(auth)";
 
         if (user && !inAuthGroup)
-            router.push('/(auth)/home');
+            router.replace('/(auth)/home');
         else
-            router.push('/');
+            router.replace('/');
 
     }, [user, initializing]);
 
@@ -51,6 +51,7 @@ export default function RootLayout() {
     return (
         <Stack>
             <Stack.Screen name="index" />
+            <Stack.Screen name="(auth)" />
         </Stack>
     );
 }
