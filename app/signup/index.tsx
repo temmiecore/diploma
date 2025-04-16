@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { useRouter } from "expo-router";
+import auth from "@react-native-firebase/auth";
 import { useUserStore } from "@/helpers/useUserStore";
 import { User } from "@/helpers/types";
-import auth from "@react-native-firebase/auth";
+import { firebase } from '@react-native-firebase/database';
 
 export default function SignUp() {
     const { setUser } = useUserStore();
@@ -14,10 +15,14 @@ export default function SignUp() {
 
     const router = useRouter();
 
-    const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+    const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+
+    const database = firebase
+        .app()
+        .database("https://taskapet-9c229-default-rtdb.europe-west1.firebasedatabase.app/");
 
     const handleNext = async () => {
-        if (email.match(emailRegex)) {
+        if (!emailRegex.test(email)) {
             alert("Invalid email address!");
             return;
         }
@@ -33,32 +38,40 @@ export default function SignUp() {
         }
 
         try {
-            const signInMethods = await auth().fetchSignInMethodsForEmail(email);
-            // user exists 
-            if (signInMethods.length > 0) {
-                alert("User with this email already exists!");
-                return;
+            const snapshot = await database.ref("/users").once("value");
+            const usersObj = snapshot.val();
+
+            if (usersObj) {
+                const usersArray = Object.values(usersObj);
+
+                // email is already used
+                if (usersArray.find((user: any) => user.email === email)) {
+                    alert("User with this email already exists!");
+                    return;
+                }
             }
+            
+            const newUser: User = {
+                email,
+                password: password1,
+                name: '',
+                age: '',
+                gender: '',
+                tasks: [],
+                pet: null,
+                coinAmount: 0,
+                profileImage: null,
+            };
+
+            setUser(newUser);
+            console.log(newUser);
+
+            router.navigate("/signup/personalInformation");
+
+        } catch (e: any) {
+            console.error("Error checking email: ", e);
         }
-        catch (e: any) {
-            console.log("Error checking email: ", e);
-        }
 
-        const newUser: User = {
-            email,
-            password: password1,
-            name: '',
-            age: '',
-            gender: '',
-            pet: null,
-            coinAmount: 0,
-            profileImage: null,
-        };
-
-        setUser(newUser);
-        console.log(newUser);
-
-        router.navigate("/signup/personalInformation");
     }
 
     return (
