@@ -1,8 +1,8 @@
-import { useUserStore } from "@/helpers/useUserStore";
 import { KeyboardAvoidingView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import auth from "@react-native-firebase/auth";
 import { FirebaseError } from "firebase/app";
 import { firebase } from '@react-native-firebase/database';
+import { useUserStore } from "@/helpers/useUserStore";
 
 export default function finishSignUp() {
     const { user } = useUserStore();

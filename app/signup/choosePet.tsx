@@ -7,6 +7,7 @@ import { FlatList, Image, KeyboardAvoidingView, StyleSheet, Text, TouchableOpaci
 const pets: Pet[] = [
     {
         id: '1',
+        name: "",
         type: 'Pichi',
         health: 120,
         speed: 80,
@@ -16,6 +17,7 @@ const pets: Pet[] = [
     },
     {
         id: '2',
+        name: "",
         type: 'Char',
         health: 100,
         speed: 95,
@@ -25,6 +27,7 @@ const pets: Pet[] = [
     },
     {
         id: '3',
+        name: "",
         type: 'Flower',
         health: 150,
         speed: 40,
@@ -34,6 +37,7 @@ const pets: Pet[] = [
     },
     {
         id: '4',
+        name: "",
         type: 'Whatever',
         health: 110,
         speed: 90,
