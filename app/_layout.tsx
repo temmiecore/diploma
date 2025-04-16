@@ -1,7 +1,7 @@
 import { Stack, useRouter, useSegments } from "expo-router";
 import { useEffect, useState } from "react";
 import auth, { FirebaseAuthTypes } from "@react-native-firebase/auth";
-import { ActivityIndicator, View } from "react-native";
+import { ActivityIndicator, BackHandler, View } from "react-native";
 
 export default function RootLayout() {
     // Set an initializing state whilst Firebase connects
@@ -36,6 +36,28 @@ export default function RootLayout() {
 
     }, [user, initializing]);
 
+    useEffect(() => {
+        const backAction = () => {
+            const inAuthGroup = segments[0] === '(auth)';
+
+            if (inAuthGroup)
+                return true;
+            else
+                return false;
+
+        };
+
+        const backHandler = BackHandler.addEventListener(
+            'hardwareBackPress',
+            backAction
+        );
+        console.log(segments);
+
+        return () => backHandler.remove();
+    }, [segments]);
+
+
+
     if (initializing)
         return (
             <View
@@ -50,8 +72,10 @@ export default function RootLayout() {
 
     return (
         <Stack>
-            <Stack.Screen name="index" />
-            <Stack.Screen name="(auth)" />
+            <Stack.Screen name="index" options={{ headerShown: false }}/>
+            <Stack.Screen name="login" options={{ headerShown: false }}/>
+            <Stack.Screen name="signup" options={{ headerShown: false }}/>
+            <Stack.Screen name="(auth)" options={{ headerShown: false }} />
         </Stack>
     );
 }

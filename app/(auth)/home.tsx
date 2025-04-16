@@ -3,7 +3,6 @@ import auth from "@react-native-firebase/auth";
 import { useEffect, useState } from "react";
 import { Task } from "@/helpers/types";
 import { firebase } from '@react-native-firebase/database';
-import { useRouter } from "expo-router";
 
 export default function MainPage() {
     const [tasks, setTasks] = useState<Task[]>([]);
@@ -25,8 +24,6 @@ export default function MainPage() {
                 return;
             }
 
-            console.log(data);
-
             const fetchedTasks: Task[] = Object.entries(data).map(([id, task]: [string, any]) => ({
                 id,
                 title: task.title,
@@ -40,8 +37,6 @@ export default function MainPage() {
             setTasks(fetchedTasks);
         })
     };
-
-    const router = useRouter();
 
     useEffect(() => {
         fetchTasks();
@@ -72,37 +67,15 @@ export default function MainPage() {
         </View>
     );
 
-    const signOut = () => {
-        auth().signOut();
-    }
 
     return (
         <View style={styles.container}>
-            <Button onPress={signOut} title="sign out"/>
             <FlatList
                 data={tasks}
                 renderItem={renderTask}
                 keyExtractor={item => item.id}
                 ListEmptyComponent={<Text style={{ textAlign: 'center' }}>No tasks for today!</Text>}
             />
-
-            <View style={styles.footer}>
-                <TouchableOpacity onPress={() => router.navigate("/pet")}>
-                    <Image source={require('../../assets/images/pet.png')} style={styles.icon} />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => router.navigate("/shop")}>
-                    <Image source={require('../../assets/images/shop.png')} style={styles.icon} />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => router.navigate("/home")}>
-                    <Image source={require('../../assets/images/home.png')} style={styles.icon} />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => router.navigate("/tasks")}>
-                    <Image source={require('../../assets/images/tasks.png')} style={styles.icon} />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => router.navigate("/profile")}>
-                    <Image source={require('../../assets/images/profile.png')} style={styles.icon} />
-                </TouchableOpacity>
-            </View>
         </View>
     );
 }
