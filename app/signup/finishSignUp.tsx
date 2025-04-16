@@ -5,7 +5,7 @@ import { firebase } from '@react-native-firebase/database';
 import { useUserStore } from "@/helpers/useUserStore";
 
 export default function finishSignUp() {
-    const { user } = useUserStore();
+    const { user, updateUser } = useUserStore();
 
     const database = firebase
         .app()
@@ -16,6 +16,8 @@ export default function finishSignUp() {
             // create user in AUTH
             if (user?.email && user?.password) {
                 const userCredentials = await auth().createUserWithEmailAndPassword(user.email, user.password);
+
+                
 
                 // get UID
                 const uid = userCredentials.user.uid;
