@@ -1,5 +1,5 @@
 import { Stack, Tabs } from 'expo-router';
-import { Image, StyleSheet } from 'react-native';
+import { Button, Image, StyleSheet } from 'react-native';
 
 export default function TabLayout() {
     return (
@@ -19,8 +19,10 @@ export default function TabLayout() {
                             source={require('../../../assets/images/pet.png')}
                             style={styles.image}
                         />
-                    )
+                    ),
+                    headerShown: false
                 }}
+                
             />
             <Tabs.Screen
                 name="shop"
@@ -30,7 +32,8 @@ export default function TabLayout() {
                             source={require('../../../assets/images/shop.png')}
                             style={styles.image}
                         />
-                    )
+                    ),
+                    headerShown: false
                 }}
             />
             <Tabs.Screen
@@ -41,7 +44,8 @@ export default function TabLayout() {
                             source={require('../../../assets/images/home.png')}
                             style={styles.image}
                         />
-                    )
+                    ),
+                    headerShown: false
                 }}
             />
             <Tabs.Screen
@@ -52,7 +56,8 @@ export default function TabLayout() {
                             source={require('../../../assets/images/tasks.png')}
                             style={styles.image}
                         />
-                    )
+                    ),
+                    headerShown: false
                 }}
             />
             <Tabs.Screen
@@ -63,7 +68,8 @@ export default function TabLayout() {
                             source={require('../../../assets/images/profile.png')}
                             style={styles.image}
                         />
-                    )
+                    ),
+                    headerShown: false
                 }}
             />
         </Tabs>

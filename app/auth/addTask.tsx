@@ -1,24 +1,37 @@
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import auth from "@react-native-firebase/auth";
-import { Button, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
-import DatePicker from 'react-native-date-picker';
-import { firebase } from '@react-native-firebase/database';
+import {
+    Button,
+    StyleSheet,
+    Switch,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View,
+} from "react-native";
+import DatePicker from "react-native-date-picker";
+import { firebase } from "@react-native-firebase/database";
 import { uid } from "uid";
 
 export default function AddTaskPage() {
-    const [title, setTitle] = useState('');
-    const [description, setDescription] = useState('');
+    const [title, setTitle] = useState("");
+    const [description, setDescription] = useState("");
     const [deadline, setDeadline] = useState(new Date());
     const [showDatePicker, setShowDatePicker] = useState(false);
-    const [tags, setTags] = useState('');
-    const [difficulty, setDifficulty] = useState<'Easy' | 'Medium' | 'Hard'>('Easy');
+    const [tags, setTags] = useState("");
+    const [difficulty, setDifficulty] = useState<"Easy" | "Medium" | "Hard">(
+        "Easy"
+    );
+    const [isTodo, setIsTodo] = useState<boolean>(false);
 
     const router = useRouter();
 
     const database = firebase
         .app()
-        .database("https://taskapet-9c229-default-rtdb.europe-west1.firebasedatabase.app/");
+        .database(
+            "https://taskapet-9c229-default-rtdb.europe-west1.firebasedatabase.app/"
+        );
 
     const handleAddTask = async () => {
         const userId = auth().currentUser?.uid;
@@ -26,25 +39,22 @@ export default function AddTaskPage() {
         const taskId: string = uid();
 
         try {
-            await database
-            .ref(`/users/${userId}/tasks/${taskId}`)
-            .set({
+            await database.ref(`/users/${userId}/tasks/${taskId}`).set({
                 id: taskId,
                 title: title,
                 description: description,
                 deadline: deadline.toISOString(),
-                tags: tags.split(','),
+                tags: tags.split(","),
                 difficulty: difficulty,
-                isCompleted: false
+                isCompleted: false,
+                isTodo: isTodo,
             });
 
             alert("Task added!");
             router.back();
-        }
-        catch (e: any) {
+        } catch (e: any) {
             console.log(e);
         }
-        
     };
 
     return (
@@ -59,10 +69,17 @@ export default function AddTaskPage() {
             <TextInput style={styles.input} value={title} onChangeText={setTitle} />
 
             <Text style={styles.label}>Description (optional)</Text>
-            <TextInput style={styles.input} value={description} onChangeText={setDescription} />
+            <TextInput
+                style={styles.input}
+                value={description}
+                onChangeText={setDescription}
+            />
 
             <Text style={styles.label}>Deadline</Text>
-            <TouchableOpacity onPress={() => setShowDatePicker(true)} style={styles.input}>
+            <TouchableOpacity
+                onPress={() => setShowDatePicker(true)}
+                style={styles.input}
+            >
                 <Text>{deadline.toDateString()}</Text>
             </TouchableOpacity>
             {showDatePicker && (
@@ -71,11 +88,11 @@ export default function AddTaskPage() {
                     open={showDatePicker}
                     date={deadline}
                     onConfirm={(date) => {
-                        setShowDatePicker(false)
-                        setDeadline(date)
+                        setShowDatePicker(false);
+                        setDeadline(date);
                     }}
                     onCancel={() => {
-                        setShowDatePicker(false)
+                        setShowDatePicker(false);
                     }}
                 />
             )}
@@ -85,16 +102,22 @@ export default function AddTaskPage() {
 
             <Text style={styles.label}>Difficulty</Text>
             <View style={styles.difficultyContainer}>
-                {['Easy', 'Medium', 'Hard'].map(level => (
+                {["Easy", "Medium", "Hard"].map((level) => (
                     <TouchableOpacity
                         key={level}
-                        style={[styles.difficultyButton, difficulty === level && styles.selectedDifficulty]}
-                        onPress={() => setDifficulty(level as 'Easy' | 'Medium' | 'Hard')}
+                        style={[
+                            styles.difficultyButton,
+                            difficulty === level && styles.selectedDifficulty,
+                        ]}
+                        onPress={() => setDifficulty(level as "Easy" | "Medium" | "Hard")}
                     >
                         <Text>{level}</Text>
                     </TouchableOpacity>
                 ))}
             </View>
+
+            <Text style={styles.label}>Is it a To-Do?</Text>
+            <Switch style={styles.switch} value={isTodo} onValueChange={setIsTodo} />
 
             <Button title="Add Task" onPress={handleAddTask} />
         </View>
@@ -103,16 +126,27 @@ export default function AddTaskPage() {
 
 const styles = StyleSheet.create({
     container: { flex: 1, padding: 20 },
-    exitButton: { alignSelf: 'flex-end', marginBottom: 10 },
-    exitText: { color: 'red', fontSize: 16 },
-    title: { fontSize: 24, fontWeight: 'bold', marginBottom: 20 },
-    label: { marginTop: 10, fontWeight: '600' },
+    exitButton: { alignSelf: "flex-end", marginBottom: 10 },
+    exitText: { color: "red", fontSize: 16 },
+    title: { fontSize: 24, fontWeight: "bold", marginBottom: 20 },
+    label: { marginTop: 10, fontWeight: "600" },
     input: {
-        borderWidth: 1, borderColor: '#ccc', padding: 10, borderRadius: 8, marginTop: 5,
+        borderWidth: 1,
+        borderColor: "#ccc",
+        padding: 10,
+        borderRadius: 8,
+        marginTop: 5,
     },
-    difficultyContainer: { flexDirection: 'row', marginVertical: 10 },
+    difficultyContainer: { flexDirection: "row", marginVertical: 10 },
     difficultyButton: {
-        padding: 10, borderWidth: 1, borderColor: '#ccc', borderRadius: 8, marginRight: 10,
+        padding: 10,
+        borderWidth: 1,
+        borderColor: "#ccc",
+        borderRadius: 8,
+        marginRight: 10,
     },
-    selectedDifficulty: { backgroundColor: '#ddd' },
+    selectedDifficulty: { backgroundColor: "#ddd" },
+    switch: {
+        // whatever
+    },
 });

@@ -7,6 +7,8 @@ import { useRouter, useSegments } from "expo-router";
 
 export default function TasksPage() {
     const [tasks, setTasks] = useState<Task[]>([]);
+    const [listId, setListId] = useState<number>(0);
+    const [listTasks, setListTasks] = useState<Task[]>([]);
 
     const segments = useSegments();
 
@@ -36,6 +38,7 @@ export default function TasksPage() {
                 tags: task.tags || [],
                 difficulty: task.difficulty,
                 isCompleted: task.isCompleted || false,
+                isTodo: task.isTodo || false,
             }));
 
             setTasks(fetchedTasks);
@@ -53,7 +56,6 @@ export default function TasksPage() {
             .ref(`/users/${userId}/tasks/${taskId}`)
             .update({ isCompleted: true });
     }
-
 
     const handleTaskOpenAddWindow = () => {
         router.navigate("../addTask");
@@ -76,11 +78,49 @@ export default function TasksPage() {
         </View>
     );
 
+    useEffect(() => {
+        switch (listId) {
+            case 0:
+                setListTasks(tasks.filter(task => {
+                    const date = new Date()
+                    const endOfWeek = new Date();
+                    const deadline = new Date(task.deadline);
+                    
+                    endOfWeek.setDate(date.getDate() + (7 - date.getDay()));
+                    endOfWeek.setHours(23, 59, 59, 999);
+
+                    return deadline <= endOfWeek; 
+                }));
+                break;
+            case 1:
+                setListTasks(tasks.filter(task => {
+                    return task.isTodo;
+                }));
+                break;
+            case 2:
+                setListTasks(tasks);
+                break;
+            default:
+                setListTasks(tasks);
+                break;
+        }
+    }, [listId]);
 
     return (
         <View style={styles.container}>
+            <View style={styles.header}>
+                <TouchableOpacity style={styles.headerButton} onPress={() => setListId(0)}>
+                    <Text style={styles.headerButtonText}>This Week</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.headerButton} onPress={() => setListId(1)}>
+                    <Text style={styles.headerButtonText}>To-Dos</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.headerButton} onPress={() => setListId(2)}>
+                    <Text style={styles.headerButtonText}>All Tasks</Text>
+                </TouchableOpacity>
+            </View>
             <FlatList
-                data={tasks}
+                data={listTasks}
                 renderItem={renderTask}
                 keyExtractor={item => item.id}
                 ListEmptyComponent={<Text style={{ textAlign: 'center' }}>No tasks for today!</Text>}
@@ -134,5 +174,19 @@ const styles = StyleSheet.create({
     },
     addButtonText: {
         fontSize: 64
+    },
+    header: {
+        flexDirection: "row",
+        gap: 12,
+        paddingHorizontal: 12,
+        height: 48
+    },
+    headerButton: {
+        backgroundColor: '#4e8cff',
+        borderRadius: 10,
+        padding: 10
+    },
+    headerButtonText: {
+
     }
 });

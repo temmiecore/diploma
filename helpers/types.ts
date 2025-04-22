@@ -16,7 +16,8 @@ export interface Task {
     deadline: string;
     tags: string[];
     difficulty: string;
-    isCompleted: boolean
+    isCompleted: boolean;
+    isTodo: boolean;
 }
 
 export interface User {

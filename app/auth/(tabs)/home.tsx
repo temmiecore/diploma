@@ -1,4 +1,4 @@
-import { Button, FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Button, FlatList, Image, Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import auth from "@react-native-firebase/auth";
 import { useEffect, useState } from "react";
 import { Task } from "@/helpers/types";
@@ -6,7 +6,12 @@ import { firebase } from '@react-native-firebase/database';
 import { useRouter, useSegments } from "expo-router";
 
 export default function MainPage() {
+    const [originalTaskList, setOriginalTaskList] = useState<Task[]>([]);
     const [tasks, setTasks] = useState<Task[]>([]);
+    const [sortMenuVisible, setSortMenuVisible] = useState(false);
+    const [filterMenuVisible, setFilterMenuVisible] = useState(false);
+    const [tagFilterMenuVisible, setTagFilterMenuVisible] = useState(false);
+    const [tagFilter, setTagFilter] = useState('');
 
     const segments = useSegments();
 
@@ -43,15 +48,15 @@ export default function MainPage() {
                 tags: task.tags || [],
                 difficulty: task.difficulty,
                 isCompleted: task.isCompleted || false,
+                isTodo: task.isTodo || false,
             }))
-            .filter((task: Task) => {
-                const deadline = new Date(task.deadline);
-
-                console.log(isToday(deadline));
-                return isToday(deadline);
-            });
+                .filter((task: Task) => {
+                    const deadline = new Date(task.deadline);
+                    return isToday(deadline);
+                });
 
             setTasks(fetchedTasks);
+            setOriginalTaskList(fetchedTasks);
         })
     };
 
@@ -59,14 +64,30 @@ export default function MainPage() {
         fetchTasks();
     }, [segments]);
 
-    const handleTaskCompletion = (taskId: string) => {
+    const handleTaskCompletion = async (taskId: string) => {
         const userId = auth().currentUser?.uid;
 
-        database
+        const snapshot = await database
             .ref(`/users/${userId}/tasks/${taskId}`)
-            .update({ isCompleted: true });
-    }
+            .once("value");
 
+        const isTaskTodo = snapshot.val().isTodo;
+
+        // does not work
+        if (isTaskTodo) {
+            database
+                .ref(`/users/${userId}/tasks/${taskId}`)
+                .remove();
+            fetchTasks();
+        }
+        else {
+            database
+                .ref(`/users/${userId}/tasks/${taskId}`)
+                .set({ isCompleted: true })
+            fetchTasks();
+        }
+
+    }
 
     const handleTaskOpenAddWindow = () => {
         router.navigate("../addTask");
@@ -74,7 +95,7 @@ export default function MainPage() {
 
     const renderTask = ({ item }: { item: Task }) => (
         <View style={styles.taskCard}>
-            <Text style={styles.taskTitle}>{item.title}</Text>
+            <Text style={styles.taskTitle}>{item.title} - {item.difficulty}</Text>
             <Text style={styles.taskDesc}>{item.description}</Text>
             <Text style={styles.taskDeadline}>Deadline: {item.deadline}</Text>
             <Text style={styles.taskTags}>Tags: {item.tags.join(', ')}</Text>
@@ -89,9 +110,51 @@ export default function MainPage() {
         </View>
     );
 
+    const difficultyOrder: Record<string, number> = {
+        'Easy': 1,
+        'Medium': 2,
+        'Hard': 3,
+    };
+
+    const handleTaskSort = (option: number) => {
+        switch (option) {
+            // By deadline
+            case 0: {
+                const sortedTasks = [...tasks];
+                sortedTasks.sort((a, b) => new Date(a.deadline).getTime() - new Date(b.deadline).getTime());
+                setTasks(sortedTasks);
+                break;
+            }
+            // By difficulty
+            case 1: {
+                const sortedTasks = [...tasks];
+                sortedTasks.sort((a, b) => difficultyOrder[a.difficulty] - difficultyOrder[b.difficulty]);
+                setTasks(sortedTasks);
+                break;
+            }
+            default: break;
+        }
+    };
+
+    const handleTaskFilter = () => {
+        const filteredTasks = [...tasks].filter((task) => task.tags.includes(tagFilter));
+        setTasks(filteredTasks);
+    };
 
     return (
         <View style={styles.container}>
+            <View style={styles.header}>
+                <Text style={styles.headerTitle}>Today's tasks</Text>
+                <View style={styles.headerButtons}>
+                    <TouchableOpacity onPress={() => setSortMenuVisible(true)}>
+                        <Image source={require('@/assets/images/sort.png')} style={styles.icon} />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => setFilterMenuVisible(true)}>
+                        <Image source={require('@/assets/images/filter.png')} style={styles.icon} />
+                    </TouchableOpacity>
+                </View>
+            </View>
+
             <FlatList
                 data={tasks}
                 renderItem={renderTask}
@@ -104,6 +167,40 @@ export default function MainPage() {
             >
                 <Text style={styles.addButtonText}>+</Text>
             </TouchableOpacity>
+
+            <Modal visible={sortMenuVisible} transparent animationType="fade">
+                <TouchableOpacity style={styles.modalOverlay} onPress={() => setSortMenuVisible(false)}>
+                    <View style={styles.menu}>
+                        <Button title="No sort" onPress={() => { setTasks(originalTaskList); setSortMenuVisible(false); }} />
+                        <Button title="By deadline" onPress={() => { handleTaskSort(0); setSortMenuVisible(false); }} />
+                        <Button title="By difficulty" onPress={() => { handleTaskSort(1); setSortMenuVisible(false); }} />
+                    </View>
+                </TouchableOpacity>
+            </Modal>
+
+            <Modal visible={filterMenuVisible} transparent animationType="fade">
+                <TouchableOpacity style={styles.modalOverlay} onPress={() => setFilterMenuVisible(false)}>
+                    <View style={styles.menu}>
+                        <Button title="Clear filter" onPress={() => { setTagFilter(''); setTasks(originalTaskList); setFilterMenuVisible(false); }} />
+                        <Button title="By tags..." onPress={() => { setFilterMenuVisible(false); setTagFilterMenuVisible(true); }} />
+                    </View>
+                </TouchableOpacity>
+            </Modal>
+
+            <Modal visible={tagFilterMenuVisible} transparent animationType="fade">
+                <TouchableOpacity style={styles.modalOverlay} onPress={() => setTagFilterMenuVisible(false)}>
+                    <View style={styles.menu}>
+                        <Text style={{ fontSize: 16, marginBottom: 8 }}>Enter tag to filter:</Text>
+                        <TextInput
+                            style={styles.textInput}
+                            placeholder="e.g. work"
+                            value={tagFilter}
+                            onChangeText={setTagFilter}
+                        />
+                        <Button title="Apply" onPress={() => { handleTaskFilter(); setTagFilterMenuVisible(false) }} />
+                    </View>
+                </TouchableOpacity>
+            </Modal>
         </View>
     );
 }
@@ -120,7 +217,7 @@ const styles = StyleSheet.create({
     taskTitle: { fontSize: 20, fontWeight: '600', marginBottom: 4 },
     taskDesc: { fontSize: 16, color: '#555', marginBottom: 4 },
     taskDeadline: { fontSize: 14, color: '#777', marginBottom: 4 },
-    taskTags: { fontSize: 14, color: '#999', marginBottom: 8 },
+    taskTags: { fontSize: 14, color: '#999', marginBottom: 4 },
     completeButton: {
         backgroundColor: '#4e8cff',
         padding: 10,
@@ -147,5 +244,37 @@ const styles = StyleSheet.create({
     },
     addButtonText: {
         fontSize: 64
+    },
+    header: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        paddingHorizontal: 16,
+        paddingVertical: 12,
+        borderBottomWidth: 1,
+        borderColor: '#ddd',
+        backgroundColor: '#fafafa',
+    },
+    headerTitle: { fontSize: 24, fontWeight: 'bold' },
+    headerButtons: { flexDirection: 'row', gap: 16 },
+    modalOverlay: {
+        flex: 1,
+        backgroundColor: 'rgba(0,0,0,0.3)',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    menu: {
+        backgroundColor: '#fff',
+        borderRadius: 8,
+        padding: 20,
+        minWidth: 220,
+        gap: 8
+    },
+    textInput: {
+        borderWidth: 1,
+        borderColor: '#ccc',
+        padding: 8,
+        borderRadius: 6,
+        marginBottom: 12,
     }
 });
