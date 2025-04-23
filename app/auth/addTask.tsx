@@ -24,7 +24,7 @@ export default function AddTaskPage() {
         "Easy"
     );
     const [isRepeated, setIsRepeated] = useState<boolean>(false);
-    const [repeatInterval, setRepeatInterval] = useState<number>(-1);
+    const [repeatInterval, setRepeatInterval] = useState<string>("");
 
     const router = useRouter();
 
@@ -99,7 +99,7 @@ export default function AddTaskPage() {
                 />
             )}
 
-            <Text style={styles.label}>Tags (comma separated)</Text>
+            <Text style={styles.label}>Tags (Comma separated. No spaces!)</Text>
             <TextInput style={styles.input} value={tags} onChangeText={setTags} />
 
             <Text style={styles.label}>Difficulty</Text>
@@ -124,7 +124,7 @@ export default function AddTaskPage() {
             </View>
 
             <Text style={styles.label}>Repeat Interval</Text>
-            <TextInput style={styles.input} value={repeatInterval.toString()} onChangeText={(e) => { setRepeatInterval(Number.parseInt(e)) }} />
+            <TextInput style={styles.input} value={repeatInterval} onChangeText={setRepeatInterval} keyboardType="numeric"/>
 
             <TouchableOpacity onPress={handleAddTask} style={styles.button}>
                 <Text>Add Task</Text>

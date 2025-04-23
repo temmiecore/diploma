@@ -77,7 +77,8 @@ export default function MainPage() {
 
         if (isTaskRepeatable) {
             const previousDeadline = await snapshot.val().deadline;
-            const taskRepeatInterval = await snapshot.val().repeatInterval;
+            const taskRepeatInterval = await Number.parseInt(snapshot.val().repeatInterval);
+            // console.log(taskRepeatInterval);
             const newDeadline = new Date(previousDeadline);
             newDeadline.setDate(newDeadline.getDate() + taskRepeatInterval);
 
