@@ -4,6 +4,8 @@ import { useRouter } from "expo-router";
 import { useState } from "react";
 import { FlatList, Image, KeyboardAvoidingView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
+const today = new Date();
+
 const pets: Pet[] = [
     {
         id: '1',
@@ -13,7 +15,8 @@ const pets: Pet[] = [
         speed: 80,
         armor: 70,
         damage: 90,
-        icon: require('../../assets/images/pichi.png'),
+        lastFedDate: today.toISOString(),
+        lastPlayedDate: today.toISOString(),
     },
     {
         id: '2',
@@ -23,7 +26,8 @@ const pets: Pet[] = [
         speed: 95,
         armor: 50,
         damage: 85,
-        icon: require('../../assets/images/char.png'),
+        lastFedDate: today.toISOString(),
+        lastPlayedDate: today.toISOString(),
     },
     {
         id: '3',
@@ -33,17 +37,19 @@ const pets: Pet[] = [
         speed: 40,
         armor: 100,
         damage: 70,
-        icon: require('../../assets/images/flower.png'),
+        lastFedDate: today.toISOString(),
+        lastPlayedDate: today.toISOString(),
     },
     {
         id: '4',
         name: "",
-        type: 'Whatever',
+        type: 'Water',
         health: 110,
         speed: 90,
         armor: 60,
         damage: 95,
-        icon: require('../../assets/images/whatever.png'),
+        lastFedDate: today.toISOString(),
+        lastPlayedDate: today.toISOString(),
     },
 ];
 
@@ -67,6 +73,15 @@ export default function choosePet() {
             alert("Select pet first!"); //later - make the button grayed out before user chooses pet
     };
 
+    const chooseIcon = (type: string) => {
+        switch (type) {
+            case "Pichi": return require("@/assets/images/pichi.png"); 
+            case "Char": return require("@/assets/images/char.png");
+            case "Flower": return require("@/assets/images/flower.png"); 
+            case "Water": return require("@/assets/images/water.png"); 
+        }
+    }
+
     const renderPet = ({ item }: { item: Pet }) => (
         <TouchableOpacity
             style={[
@@ -75,7 +90,7 @@ export default function choosePet() {
             ]}
             onPress={() => setSelectedPet(item)}
         >
-            <Image source={item.icon} style={styles.petIcon} />
+            <Image source={chooseIcon(item.type)} style={styles.petIcon} />
         </TouchableOpacity>
     );
 

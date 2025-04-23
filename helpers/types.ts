@@ -6,7 +6,8 @@ export interface Pet {
     speed: number;
     armor: number;
     damage: number;
-    icon: any;
+    lastFedDate: string;
+    lastPlayedDate: string;
 }
 
 export interface Task {
