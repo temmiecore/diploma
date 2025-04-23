@@ -99,9 +99,11 @@ export default function MainPage() {
     const handleTaskOpenAddWindow = () => {
         router.navigate("../addTask");
     };
-
-    const renderTask = ({ item }: { item: Task }) => (
-        !item.isCompleted && (
+    
+    const renderTask = ({ item }: { item: Task }) => {
+        if (item.isCompleted) return null;
+    
+        return (
             <View style={styles.taskCard}>
                 <Text style={styles.taskTitle}>{item.title} - {item.difficulty}</Text>
                 <Text style={styles.taskDesc}>{item.description}</Text>
@@ -114,8 +116,9 @@ export default function MainPage() {
                     <Text style={styles.completeButtonText}>Complete</Text>
                 </TouchableOpacity>
             </View>
-        ));
-
+        );
+    };
+    
 
     const difficultyOrder: Record<string, number> = {
         'Easy': 1,

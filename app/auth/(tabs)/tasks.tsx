@@ -90,8 +90,10 @@ export default function TasksPage() {
         router.navigate("../addTask");
     };
 
-    const renderTask = ({ item }: { item: Task }) => (
-        !item.isCompleted && (
+    const renderTask = ({ item }: { item: Task }) => {
+        if (item.isCompleted) return null;
+    
+        return (
             <View style={styles.taskCard}>
                 <Text style={styles.taskTitle}>{item.title} - {item.difficulty}</Text>
                 <Text style={styles.taskDesc}>{item.description}</Text>
@@ -104,7 +106,9 @@ export default function TasksPage() {
                     <Text style={styles.completeButtonText}>Complete</Text>
                 </TouchableOpacity>
             </View>
-        ));
+        );
+    };
+    
 
     useEffect(() => {
         switch (listId) {
