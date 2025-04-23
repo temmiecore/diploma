@@ -26,15 +26,21 @@ export default function RootLayout() {
 
     useEffect(() => {
         if (initializing) return;
-
+    
         const inAuthGroup = segments[0] === "auth";
-
-        if (user && !inAuthGroup)
-            router.replace('/auth/(tabs)/home');
-        else
-            router.replace('/');
-
-    }, [user, initializing]);
+    
+        if (user) {
+            if (!inAuthGroup) {
+                router.replace('/auth/(tabs)/home');
+            }
+        } else {
+            if (inAuthGroup) {
+                router.replace('/');
+            }
+        }
+    
+    }, [user, initializing, segments]);
+    
 
     useEffect(() => {
         const backAction = () => {
