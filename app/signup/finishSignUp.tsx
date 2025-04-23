@@ -18,8 +18,6 @@ export default function finishSignUp() {
             if (user?.email && user?.password) {
                 const userCredentials = await auth().createUserWithEmailAndPassword(user.email, user.password);
 
-
-
                 // get UID
                 const userId = userCredentials.user.uid;
 
@@ -31,14 +29,24 @@ export default function finishSignUp() {
                     .ref(`/users/${userId}`)
                     .set(userWithoutPassword);
 
-                // create test tasks (ugh)
-                for (let i = 0; i < 3; i++) {
+                // create test tasks
+                for (let i = 0; i < 5; i++) {
                     const taskId: string = uid();
                     const date: string = new Date().toISOString();
 
                     database
                         .ref(`/users/${userId}/tasks/${taskId}`)
-                        .set({ id: taskId, title: "Task Name", description: "Description goes here!", deadline: date, tags: ["important", "school"], difficulty: "Hard", isCompleted: false });
+                        .set({
+                            id: taskId,
+                            title: "Task Name",
+                            description: "Description goes here!",
+                            deadline: date,
+                            tags: ["important", "school"],
+                            difficulty: "Hard",
+                            isCompleted: false,
+                            isRepeated: false,
+                            repeatInterval: -1,
+                        });
                 }
 
                 console.log("uid: ", uid);

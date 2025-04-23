@@ -42,7 +42,8 @@ export default function TasksPage() {
                 tags: task.tags || [],
                 difficulty: task.difficulty,
                 isCompleted: task.isCompleted || false,
-                isTodo: task.isTodo || false,
+                isRepeated: task.isRepeated || false,
+                repeatInterval: task.repeatInterval || -1
             }));
 
             setTasks(fetchedTasks);
@@ -54,12 +55,35 @@ export default function TasksPage() {
         fetchTasks();
     }, [segments]);
 
-    const handleTaskCompletion = (taskId: string) => {
+    const handleTaskCompletion = async (taskId: string) => {
         const userId = auth().currentUser?.uid;
 
-        database
+        const snapshot = await database
             .ref(`/users/${userId}/tasks/${taskId}`)
-            .update({ isCompleted: true });
+            .once("value");
+
+        const isTaskRepeatable = await snapshot.val().isRepeated;
+        console.log(isTaskRepeatable);
+
+        if (isTaskRepeatable) {
+            const previousDeadline = await snapshot.val().deadline;
+            const taskRepeatInterval = await snapshot.val().repeatInterval;
+            const newDeadline = new Date(previousDeadline);
+            newDeadline.setDate(newDeadline.getDate() + taskRepeatInterval);
+
+            await database
+                .ref(`/users/${userId}/tasks/${taskId}`)
+                .update({ deadline: newDeadline.toISOString() })
+
+            fetchTasks();
+        }
+        else {
+            await database
+                .ref(`/users/${userId}/tasks/${taskId}`)
+                .update({ isCompleted: true })
+
+            fetchTasks();
+        }
     }
 
     const handleTaskOpenAddWindow = () => {
@@ -67,25 +91,27 @@ export default function TasksPage() {
     };
 
     const renderTask = ({ item }: { item: Task }) => (
-        <View style={styles.taskCard}>
-            <Text style={styles.taskTitle}>{item.title} - {item.difficulty}</Text>
-            <Text style={styles.taskDesc}>{item.description}</Text>
-            <Text style={styles.taskDeadline}>Deadline: {item.deadline}</Text>
-            <Text style={styles.taskTags}>Tags: {item.tags.join(', ')}</Text>
-            {!item.isCompleted && (
+        !item.isCompleted && (
+            <View style={styles.taskCard}>
+                <Text style={styles.taskTitle}>{item.title} - {item.difficulty}</Text>
+                <Text style={styles.taskDesc}>{item.description}</Text>
+                <Text style={styles.taskDeadline}>Deadline: {item.deadline}</Text>
+                <Text style={styles.taskTags}>Tags: {item.tags.join(', ')}</Text>
                 <TouchableOpacity
                     style={styles.completeButton}
                     onPress={() => handleTaskCompletion(item.id)}
                 >
                     <Text style={styles.completeButtonText}>Complete</Text>
                 </TouchableOpacity>
-            )}
-        </View>
-    );
+            </View>
+        ));
 
     useEffect(() => {
         switch (listId) {
             case 0:
+                ////// ADD
+                break;
+            case 1:
                 setTasks(tasks.filter(task => {
                     const date = new Date()
                     const endOfWeek = new Date();
@@ -95,11 +121,6 @@ export default function TasksPage() {
                     endOfWeek.setHours(23, 59, 59, 999);
 
                     return deadline <= endOfWeek;
-                }));
-                break;
-            case 1:
-                setTasks(tasks.filter(task => {
-                    return task.isTodo;
                 }));
                 break;
             case 2:
@@ -159,10 +180,10 @@ export default function TasksPage() {
 
             <View style={styles.categories}>
                 <TouchableOpacity style={styles.categoryButton} onPress={() => setListId(0)}>
-                    <Text style={styles.categoryButtonText}>This Week</Text>
+                    <Text style={styles.categoryButtonText}>Expired</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.categoryButton} onPress={() => setListId(1)}>
-                    <Text style={styles.categoryButtonText}>To-Dos</Text>
+                    <Text style={styles.categoryButtonText}>This Week</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.categoryButton} onPress={() => setListId(2)}>
                     <Text style={styles.categoryButtonText}>All Tasks</Text>

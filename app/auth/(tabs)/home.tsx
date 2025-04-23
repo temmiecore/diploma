@@ -48,7 +48,8 @@ export default function MainPage() {
                 tags: task.tags || [],
                 difficulty: task.difficulty,
                 isCompleted: task.isCompleted || false,
-                isTodo: task.isTodo || false,
+                isRepeated: task.isRepeated || false,
+                repeatInterval: task.repeatInterval || -1
             }))
                 .filter((task: Task) => {
                     const deadline = new Date(task.deadline);
@@ -71,22 +72,28 @@ export default function MainPage() {
             .ref(`/users/${userId}/tasks/${taskId}`)
             .once("value");
 
-        const isTaskTodo = snapshot.val().isTodo;
+        const isTaskRepeatable = await snapshot.val().isRepeated;
+        console.log(isTaskRepeatable);
 
-        // does not work
-        if (isTaskTodo) {
-            database
+        if (isTaskRepeatable) {
+            const previousDeadline = await snapshot.val().deadline;
+            const taskRepeatInterval = await snapshot.val().repeatInterval;
+            const newDeadline = new Date(previousDeadline);
+            newDeadline.setDate(newDeadline.getDate() + taskRepeatInterval);
+
+            await database
                 .ref(`/users/${userId}/tasks/${taskId}`)
-                .remove();
+                .update({ deadline: newDeadline.toISOString() })
+
             fetchTasks();
         }
         else {
-            database
+            await database
                 .ref(`/users/${userId}/tasks/${taskId}`)
-                .set({ isCompleted: true })
+                .update({ isCompleted: true })
+
             fetchTasks();
         }
-
     }
 
     const handleTaskOpenAddWindow = () => {
@@ -94,21 +101,21 @@ export default function MainPage() {
     };
 
     const renderTask = ({ item }: { item: Task }) => (
-        <View style={styles.taskCard}>
-            <Text style={styles.taskTitle}>{item.title} - {item.difficulty}</Text>
-            <Text style={styles.taskDesc}>{item.description}</Text>
-            <Text style={styles.taskDeadline}>Deadline: {item.deadline}</Text>
-            <Text style={styles.taskTags}>Tags: {item.tags.join(', ')}</Text>
-            {!item.isCompleted && (
+        !item.isCompleted && (
+            <View style={styles.taskCard}>
+                <Text style={styles.taskTitle}>{item.title} - {item.difficulty}</Text>
+                <Text style={styles.taskDesc}>{item.description}</Text>
+                <Text style={styles.taskDeadline}>Deadline: {item.deadline}</Text>
+                <Text style={styles.taskTags}>Tags: {item.tags.join(', ')}</Text>
                 <TouchableOpacity
                     style={styles.completeButton}
                     onPress={() => handleTaskCompletion(item.id)}
                 >
                     <Text style={styles.completeButtonText}>Complete</Text>
                 </TouchableOpacity>
-            )}
-        </View>
-    );
+            </View>
+        ));
+
 
     const difficultyOrder: Record<string, number> = {
         'Easy': 1,

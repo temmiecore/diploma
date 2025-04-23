@@ -17,7 +17,8 @@ export interface Task {
     tags: string[];
     difficulty: string;
     isCompleted: boolean;
-    isTodo: boolean;
+    isRepeated: boolean;
+    repeatInterval: number; // number of days?
 }
 
 export interface User {

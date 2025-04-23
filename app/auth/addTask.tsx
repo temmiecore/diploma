@@ -23,7 +23,8 @@ export default function AddTaskPage() {
     const [difficulty, setDifficulty] = useState<"Easy" | "Medium" | "Hard">(
         "Easy"
     );
-    const [isTodo, setIsTodo] = useState<boolean>(false);
+    const [isRepeated, setIsRepeated] = useState<boolean>(false);
+    const [repeatInterval, setRepeatInterval] = useState<number>(-1);
 
     const router = useRouter();
 
@@ -47,7 +48,8 @@ export default function AddTaskPage() {
                 tags: tags.split(","),
                 difficulty: difficulty,
                 isCompleted: false,
-                isTodo: isTodo,
+                isRepeated: isRepeated,
+                repeatInterval: repeatInterval,
             });
 
             alert("Task added!");
@@ -116,8 +118,11 @@ export default function AddTaskPage() {
                 ))}
             </View>
 
-            <Text style={styles.label}>Is it a To-Do?</Text>
-            <Switch style={styles.switch} value={isTodo} onValueChange={setIsTodo} />
+            <Text style={styles.label}>Is it repeatable?</Text>
+            <Switch style={styles.switch} value={isRepeated} onValueChange={setIsRepeated} />
+
+            <Text style={styles.label}>Repeat Interval</Text>
+            <TextInput style={styles.input} value={repeatInterval.toString()} onChangeText={(e) => {setRepeatInterval(Number.parseInt(e))}} />
 
             <Button title="Add Task" onPress={handleAddTask} />
         </View>
