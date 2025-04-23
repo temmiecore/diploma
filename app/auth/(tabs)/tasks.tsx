@@ -92,11 +92,11 @@ export default function TasksPage() {
 
     const renderTask = ({ item }: { item: Task }) => {
         if (item.isCompleted) return null;
-    
+
         return (
             <View style={styles.taskCard}>
                 <Text style={styles.taskTitle}>{item.title} - {item.difficulty}</Text>
-                <Text style={styles.taskDesc}>{item.description}</Text>
+                {item.description !== "" && (<Text style={styles.taskDesc}>{item.description}</Text>)}
                 <Text style={styles.taskDeadline}>Deadline: {item.deadline}</Text>
                 <Text style={styles.taskTags}>Tags: {item.tags.join(', ')}</Text>
                 <TouchableOpacity
@@ -108,7 +108,7 @@ export default function TasksPage() {
             </View>
         );
     };
-    
+
 
     useEffect(() => {
         switch (listId) {
@@ -178,6 +178,9 @@ export default function TasksPage() {
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => setFilterMenuVisible(true)}>
                         <Image source={require('@/assets/images/filter.png')} style={styles.icon} />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => router.navigate("../history")}>
+                        <Image source={require('@/assets/images/history.png')} style={styles.icon} />
                     </TouchableOpacity>
                 </View>
             </View>

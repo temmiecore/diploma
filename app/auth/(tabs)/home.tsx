@@ -99,14 +99,14 @@ export default function MainPage() {
     const handleTaskOpenAddWindow = () => {
         router.navigate("../addTask");
     };
-    
+
     const renderTask = ({ item }: { item: Task }) => {
         if (item.isCompleted) return null;
-    
+
         return (
             <View style={styles.taskCard}>
                 <Text style={styles.taskTitle}>{item.title} - {item.difficulty}</Text>
-                <Text style={styles.taskDesc}>{item.description}</Text>
+                {item.description !== "" && (<Text style={styles.taskDesc}>{item.description}</Text>)}
                 <Text style={styles.taskDeadline}>Deadline: {item.deadline}</Text>
                 <Text style={styles.taskTags}>Tags: {item.tags.join(', ')}</Text>
                 <TouchableOpacity
@@ -118,7 +118,7 @@ export default function MainPage() {
             </View>
         );
     };
-    
+
 
     const difficultyOrder: Record<string, number> = {
         'Easy': 1,

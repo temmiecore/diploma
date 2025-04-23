@@ -118,13 +118,17 @@ export default function AddTaskPage() {
                 ))}
             </View>
 
-            <Text style={styles.label}>Is it repeatable?</Text>
-            <Switch style={styles.switch} value={isRepeated} onValueChange={setIsRepeated} />
+            <View style={styles.switchContainer}>
+                <Text style={styles.label}>Is it repeatable?</Text>
+                <Switch value={isRepeated} onValueChange={setIsRepeated} />
+            </View>
 
             <Text style={styles.label}>Repeat Interval</Text>
-            <TextInput style={styles.input} value={repeatInterval.toString()} onChangeText={(e) => {setRepeatInterval(Number.parseInt(e))}} />
+            <TextInput style={styles.input} value={repeatInterval.toString()} onChangeText={(e) => { setRepeatInterval(Number.parseInt(e)) }} />
 
-            <Button title="Add Task" onPress={handleAddTask} />
+            <TouchableOpacity onPress={handleAddTask} style={styles.button}>
+                <Text>Add Task</Text>
+            </TouchableOpacity>
         </View>
     );
 }
@@ -151,7 +155,18 @@ const styles = StyleSheet.create({
         marginRight: 10,
     },
     selectedDifficulty: { backgroundColor: "#ddd" },
-    switch: {
-        // whatever
+    switchContainer: {
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between",
+    },
+    button: {
+        width: '100%',
+        height: 50,
+        backgroundColor: '#4e8cff',
+        borderRadius: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 8,
     },
 });
