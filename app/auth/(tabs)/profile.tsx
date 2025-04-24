@@ -3,9 +3,11 @@ import auth from "@react-native-firebase/auth";
 import { useEffect, useState } from "react";
 import { firebase } from '@react-native-firebase/database';
 import { Picker } from "@react-native-picker/picker";
+import { User } from "@/helpers/types";
+import { styles } from "@/helpers/styles";
 
 export default function ProfilePage() {
-    const [user, setUser] = useState<object>();
+    const [user, setUser] = useState<User>();
 
     const [name, setName] = useState("");
     const [age, setAge] = useState("");
@@ -16,6 +18,8 @@ export default function ProfilePage() {
     const [newPassword2, setNewPassword2] = useState("");
     const [darkMode, setDarkMode] = useState(false);
     const [profileImage, setProfileImage] = useState("");
+
+    const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
     const database = firebase
         .app()
@@ -53,25 +57,55 @@ export default function ProfilePage() {
         // Open image picker here
     };
 
-    const handleSaveChanges = () => {
-        const editedUser = {
+    const handleSaveChanges = async () => {
+        let editedUser = {
             ...user,
             name: name,
             age: age,
             gender: gender,
-            email: email
         }
         console.log(editedUser);
 
         const userId = auth().currentUser?.uid;
         const reference = database.ref(`/users/${userId}`);
 
+        // email change
+        if (email !== "" && email !== user?.email) {
+            if (!emailRegex.test(email)) {
+                alert("Invalid email address!");
+                return;
+            }
+
+            const snapshot = await database.ref("/users").once("value");
+            const usersObj = snapshot.val();
+
+            if (usersObj) {
+                const usersArray = Object.values(usersObj);
+
+                // email is already used
+                if (usersArray.find((user: any) => user.email === email)) {
+                    alert("User with this email already exists!");
+                    return;
+                }
+            }
+
+            try {
+                await auth().signInWithEmailAndPassword(email, currentPassword);
+                await auth().currentUser?.updateEmail(email);
+                editedUser = { ...editedUser, email: email };
+            } catch (error: any) {
+                console.error("Error updating email:", error);
+                alert("Failed to update email. Please try again.");
+                return;
+            }
+        }
+
         reference.set(editedUser);
     };
 
     return (
         <View style={styles.container}>
-            <ScrollView contentContainerStyle={styles.scrollContent}>
+            <ScrollView contentContainerStyle={styles.scrollContainer}>
                 <TouchableOpacity onPress={handleImageChange}>
                     <Image source={require("@/assets/images/placeholder_pfp.png")} style={styles.profileImage} />
                 </TouchableOpacity>
@@ -158,80 +192,8 @@ export default function ProfilePage() {
             </ScrollView>
 
             <TouchableOpacity style={styles.saveButton} onPress={handleSaveChanges}>
-                <Text style={styles.saveButtonText}>Save Changes</Text>
+                <Text style={styles.buttonText}>Save Changes</Text>
             </TouchableOpacity>
         </View>
     );
 }
-
-const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: '#fff' },
-    scrollContent: {
-        padding: 24,
-        paddingBottom: 100, // leave space for save button
-        alignItems: 'center'
-    },
-    profileImage: {
-        width: 150,
-        height: 150,
-        borderRadius: 75,
-        marginBottom: 24
-    },
-    label: {
-        fontSize: 16,
-        fontWeight: '500',
-        alignSelf: 'flex-start',
-        marginTop: 12,
-        marginBottom: 4
-    },
-    input: {
-        width: '100%',
-        borderWidth: 1,
-        borderColor: '#ccc',
-        borderRadius: 8,
-        padding: 12,
-        fontSize: 16,
-        marginBottom: 8
-    },
-    switchContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        width: '100%',
-        marginTop: 16,
-        marginBottom: 16
-    },
-    signOutButton: {
-        marginTop: 24,
-        width: '100%'
-    },
-    saveButton: {
-        position: 'absolute',
-        bottom: 20,
-        left: 20,
-        right: 20,
-        backgroundColor: '#4e8cff',
-        padding: 16,
-        borderRadius: 50,
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
-    saveButtonText: {
-        color: '#fff',
-        fontSize: 18,
-        fontWeight: '600'
-    },
-    pickerContainer: {
-        width: '100%',
-        borderWidth: 1,
-        borderRadius: 10,
-        borderColor: '#ccc',
-        marginBottom: 16,
-        overflow: 'hidden',
-        backgroundColor: '#f0f0f0',
-    },
-    picker: {
-        height: 50,
-        width: '100%',
-    },
-});

@@ -4,6 +4,7 @@ import auth from "@react-native-firebase/auth";
 import { firebase } from '@react-native-firebase/database';
 import { useEffect, useState } from "react";
 import { Task } from "@/helpers/types";
+import { styles } from "@/helpers/styles";
 
 export default function HistoryPage() {
     const router = useRouter();
@@ -59,7 +60,7 @@ export default function HistoryPage() {
     };
 
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, {padding: 20}]}>
             <TouchableOpacity onPress={() => router.back()} style={styles.exitButton}>
                 <Text style={styles.exitText}>Exit</Text>
             </TouchableOpacity>
@@ -73,20 +74,3 @@ export default function HistoryPage() {
         </View>
     );
 }
-
-const styles = StyleSheet.create({
-    container: { flex: 1, padding: 20 },
-    exitButton: { alignSelf: "flex-end", marginBottom: 10 },
-    exitText: { color: "red", fontSize: 16 },
-    taskCard: {
-        margin: 12,
-        padding: 16,
-        backgroundColor: '#f9f9f9',
-        borderRadius: 10,
-        elevation: 2,
-    },
-    taskTitle: { fontSize: 20, fontWeight: '600', marginBottom: 4 },
-    taskDesc: { fontSize: 16, color: '#555', marginBottom: 4 },
-    taskDeadline: { fontSize: 14, color: '#777', marginBottom: 4 },
-    taskTags: { fontSize: 14, color: '#999', marginBottom: 8 },
-});

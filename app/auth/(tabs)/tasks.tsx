@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Task } from "@/helpers/types";
 import { firebase } from '@react-native-firebase/database';
 import { useRouter, useSegments } from "expo-router";
+import { styles } from "@/helpers/styles";
 
 export default function TasksPage() {
     const [originalTaskList, setOriginalTaskList] = useState<Task[]>([]);
@@ -248,96 +249,3 @@ export default function TasksPage() {
         </View>
     );
 }
-
-const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: '#fff' },
-    taskCard: {
-        margin: 12,
-        padding: 16,
-        backgroundColor: '#f9f9f9',
-        borderRadius: 10,
-        elevation: 2,
-    },
-    taskTitle: { fontSize: 20, fontWeight: '600', marginBottom: 4 },
-    taskDesc: { fontSize: 16, color: '#555', marginBottom: 4 },
-    taskDeadline: { fontSize: 14, color: '#777', marginBottom: 4 },
-    taskTags: { fontSize: 14, color: '#999', marginBottom: 8 },
-    completeButton: {
-        backgroundColor: '#4e8cff',
-        padding: 10,
-        borderRadius: 8,
-        alignItems: 'center',
-    },
-    completeButtonText: { color: '#fff', fontWeight: '600' },
-    footer: {
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        padding: 14,
-        borderTopWidth: 1,
-        borderColor: '#ddd',
-        backgroundColor: '#fafafa',
-    },
-    icon: { width: 32, height: 32 },
-    addButton: {
-        position: "fixed",
-        bottom: 20,
-        backgroundColor: '#4e8cff',
-        paddingHorizontal: 24,
-        borderRadius: 100,
-        alignSelf: "center"
-    },
-    addButtonText: {
-        fontSize: 64
-    },
-    categories: {
-        flexDirection: "row",
-        gap: 12,
-        paddingHorizontal: 12,
-        height: 48,
-        borderBottomWidth: 1,
-        borderColor: '#ddd',
-        marginVertical: 8
-    },
-    categoryButton: {
-        backgroundColor: '#4e8cff',
-        borderRadius: 10,
-        padding: 10,
-        height: 40
-    },
-    categoryButtonText: {
-
-    },
-
-    header: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        paddingHorizontal: 16,
-        paddingVertical: 12,
-        borderBottomWidth: 1,
-        borderColor: '#ddd',
-        backgroundColor: '#fafafa',
-    },
-    headerTitle: { fontSize: 24, fontWeight: 'bold' },
-    headerButtons: { flexDirection: 'row', gap: 16 },
-    modalOverlay: {
-        flex: 1,
-        backgroundColor: 'rgba(0,0,0,0.3)',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    menu: {
-        backgroundColor: '#fff',
-        borderRadius: 8,
-        padding: 20,
-        minWidth: 220,
-        gap: 8
-    },
-    textInput: {
-        borderWidth: 1,
-        borderColor: '#ccc',
-        padding: 8,
-        borderRadius: 6,
-        marginBottom: 12,
-    }
-});

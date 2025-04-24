@@ -4,6 +4,7 @@ import { firebase } from '@react-native-firebase/database';
 import { useEffect, useState } from "react";
 import { Pet } from "@/helpers/types";
 import { useRouter } from "expo-router";
+import { styles } from "@/helpers/styles";
 
 export default function PetPage() {
     const router = useRouter();
@@ -86,7 +87,7 @@ export default function PetPage() {
     }
 
     return (
-        <View style={styles.container}>
+        <View style={styles.containerCentered}>
             <View style={styles.imageWrapper}>
                 <Image
                     source={chooseIcon(pet?.type)}
@@ -117,11 +118,11 @@ export default function PetPage() {
             </TouchableOpacity>
 
             <View style={styles.buttonRow}>
-                <TouchableOpacity style={styles.button} onPress={() => router.navigate("../petPlay")}>
+                <TouchableOpacity style={[styles.button, {flex: 1}]} onPress={() => router.navigate("../petPlay")}>
                     <Text style={styles.buttonText}>Play with pet</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={styles.button} onPress={() => router.navigate("../petBattle")}>
+                <TouchableOpacity style={[styles.button, {flex: 1}]} onPress={() => router.navigate("../petBattle")}>
                     <Text style={styles.buttonText}>Go on adventure!</Text>
                 </TouchableOpacity>
             </View>
@@ -142,88 +143,3 @@ export default function PetPage() {
         </View>
     )
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        paddingHorizontal: 20,
-        backgroundColor: '#fff',
-    },
-    imageWrapper: {
-        width: 150,
-        height: 150,
-        borderRadius: 75,
-        overflow: 'hidden',
-        marginBottom: 20,
-        borderWidth: 3,
-        borderColor: '#ccc',
-    },
-    petImage: {
-        width: '100%',
-        height: '100%',
-        resizeMode: 'cover',
-    },
-    petName: {
-        fontSize: 24,
-        marginVertical: 4,
-    },
-    statText: {
-        fontSize: 18,
-        marginVertical: 4,
-    },
-    statusText: {
-        fontSize: 18,
-        fontStyle: 'italic',
-        marginTop: 10,
-        marginBottom: 30,
-    },
-    buttonRow: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        width: '100%',
-        paddingHorizontal: 10,
-        alignSelf: "flex-end",
-    },
-    feedButton: {
-        backgroundColor: '#4CAF50',
-        padding: 12,
-        borderRadius: 8,
-        marginHorizontal: 5,
-        marginBottom: 8,
-        alignItems: 'center',
-    },
-    button: {
-        flex: 1,
-        backgroundColor: '#4CAF50',
-        padding: 12,
-        borderRadius: 8,
-        marginHorizontal: 5,
-        alignItems: 'center',
-    },
-    buttonText: {
-        color: '#fff',
-        fontWeight: 'bold',
-    },
-    modalOverlay: {
-        flex: 1,
-        backgroundColor: 'rgba(0,0,0,0.3)',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    menu: {
-        backgroundColor: '#fff',
-        borderRadius: 8,
-        padding: 20,
-        minWidth: 220,
-        gap: 8
-    },
-    textInput: {
-        borderWidth: 1,
-        borderColor: '#ccc',
-        padding: 8,
-        borderRadius: 6,
-        marginBottom: 12,
-    }
-});

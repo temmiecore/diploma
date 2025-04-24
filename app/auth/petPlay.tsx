@@ -105,7 +105,7 @@ export default function PetPlayPage() {
 
         router.back();
     };
-
+    
     return (
         <GestureHandlerRootView>
             <GestureDetector gesture={tap}>
