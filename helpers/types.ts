@@ -2,12 +2,16 @@ export interface Pet {
     id: string;
     name: string;
     type: string;
+    maxHealth: number;
     health: number;
     speed: number;
     armor: number;
     damage: number;
     lastFedDate: string;
     lastPlayedDate: string;
+    lastBattleDate: string;
+    xp: number,
+    level: number,
 }
 
 export interface Task {

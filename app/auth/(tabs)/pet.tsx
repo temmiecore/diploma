@@ -102,7 +102,11 @@ export default function PetPage() {
             </TouchableOpacity>
 
             <Text style={styles.statText}>
-                Health: {pet?.health}
+                Health: {pet?.health} / {pet?.maxHealth}
+            </Text>
+
+            <Text style={styles.statText}>
+                Level: {pet?.level} | XP to next level: {100 - pet?.xp}
             </Text>
 
             <Text style={styles.statText}>

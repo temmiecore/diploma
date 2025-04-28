@@ -5,7 +5,6 @@ import { Gesture, GestureDetector, GestureHandlerRootView, TouchableWithoutFeedb
 import Animated, { useAnimatedStyle, useSharedValue, withSpring, withTiming } from 'react-native-reanimated';
 import auth from "@react-native-firebase/auth";
 import { firebase } from '@react-native-firebase/database';
-import { Pet } from "@/helpers/types";
 
 const { width, height } = Dimensions.get('window');
 
@@ -105,7 +104,7 @@ export default function PetPlayPage() {
 
         router.back();
     };
-    
+
     return (
         <GestureHandlerRootView>
             <GestureDetector gesture={tap}>
