@@ -1,73 +1,10 @@
+import { chooseIcon, pets } from "@/helpers/petsMonsters";
 import { Pet } from "@/helpers/types";
 import { useUserStore } from "@/helpers/useUserStore";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { FlatList, Image, KeyboardAvoidingView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-const today = new Date();
-
-const pets: Pet[] = [
-    {
-        id: '1',
-        name: "",
-        type: 'Pichi',
-        maxHealth: 120,
-        health: 120,
-        speed: 1,
-        armor: 0,
-        damage: 4,
-        lastFedDate: today.toISOString(),
-        lastPlayedDate: today.toISOString(),
-        lastBattleDate: today.toISOString(),
-        xp: 0,
-        level: 1,
-    },
-    {
-        id: '2',
-        name: "",
-        type: 'Char',
-        maxHealth: 100,
-        health: 100,
-        speed: 1,
-        armor: 6,
-        damage: 2,
-        lastFedDate: today.toISOString(),
-        lastPlayedDate: today.toISOString(),
-        lastBattleDate: today.toISOString(),
-        xp: 0,
-        level: 1,
-    },
-    {
-        id: '3',
-        name: "",
-        type: 'Flower',
-        maxHealth: 100,
-        health: 100,
-        speed: 2,
-        armor: 2,
-        damage: 6,
-        lastFedDate: today.toISOString(),
-        lastPlayedDate: today.toISOString(),
-        lastBattleDate: today.toISOString(),
-        xp: 0,
-        level: 1,
-    },
-    {
-        id: '4',
-        name: "",
-        type: 'Water',
-        maxHealth: 150,
-        health: 150,
-        speed: 1.5,
-        armor: 3,
-        damage: 3,
-        lastFedDate: today.toISOString(),
-        lastPlayedDate: today.toISOString(),
-        lastBattleDate: today.toISOString(),
-        xp: 0,
-        level: 1,
-    },
-];
 
 export default function choosePet() {
     const [selectedPet, setSelectedPet] = useState<Pet | null>(null);
@@ -88,15 +25,6 @@ export default function choosePet() {
         else
             alert("Select pet first!"); //later - make the button grayed out before user chooses pet
     };
-
-    const chooseIcon = (type: string) => {
-        switch (type) {
-            case "Pichi": return require("@/assets/images/pichi.png"); 
-            case "Char": return require("@/assets/images/char.png");
-            case "Flower": return require("@/assets/images/flower.png"); 
-            case "Water": return require("@/assets/images/water.png"); 
-        }
-    }
 
     const renderPet = ({ item }: { item: Pet }) => (
         <TouchableOpacity
@@ -183,8 +111,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#e0f0ff',
     },
     petIcon: {
-        width: 160,
-        height: 160,
+        width: 80,
+        height: 80,
         resizeMode: 'contain',
     },
     petDetails: {

@@ -5,6 +5,7 @@ import { firebase } from '@react-native-firebase/database';
 import { Pet } from '@/helpers/types';
 import { useRouter } from 'expo-router';
 import Animated, { useAnimatedStyle, useSharedValue, withSpring, withTiming, runOnJS } from 'react-native-reanimated';
+import { chooseIcon } from '@/helpers/petsMonsters';
 
 export default function PetBattlePage() {
     const [monster, setMonster] = useState<Monster | null>(null);
@@ -171,15 +172,6 @@ export default function PetBattlePage() {
         console.log("[AUTH/PETBATTLE] BonusDamageRef ", bonusDamageRef.current);
     };
 
-    const chooseIcon = (type: string) => {
-        switch (type) {
-            case "Pichi": return require("@/assets/images/pichi.png");
-            case "Char": return require("@/assets/images/char.png");
-            case "Flower": return require("@/assets/images/flower.png");
-            case "Water": return require("@/assets/images/water.png");
-        }
-    }
-
     return (
         <View style={{ flex: 1 }}>
             <Text>Pet HP: {petHealth}</Text>
@@ -213,10 +205,18 @@ function generateRandomMonster(petLevel: number): Monster {
     const baseArmor = petLevel;
     const attackSpeed = Math.random() * 2 + 1; // between 1s and 3s
     const monsterSprites = [
-        require("@/assets/images/mr-mime.png"),
-        require("@/assets/images/pinsir.png"),
-        require("@/assets/images/venomoth.png"),
-        require("@/assets/images/weezing.png"),
+        require("@/assets/images/monsters/forlorn_goo.png"),
+        require("@/assets/images/monsters/furious_goo.png"),
+        require("@/assets/images/monsters/giant_wasp.png"),
+        require("@/assets/images/monsters/gnome.png"),
+        require("@/assets/images/monsters/gooseberus.png"),
+        require("@/assets/images/monsters/ice_golem.png"),
+        require("@/assets/images/monsters/insectoid.png"),
+        require("@/assets/images/monsters/insectoid_flying.png"),
+        require("@/assets/images/monsters/living_onion.png"),
+        require("@/assets/images/monsters/living_pea.png"),
+        require("@/assets/images/monsters/mushy_spider.png"),
+        require("@/assets/images/monsters/rabid_hare.png"),
     ];
     const sprite = monsterSprites[Math.floor(Math.random() * monsterSprites.length)];
 

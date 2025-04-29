@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { InventoryItem, Pet } from "@/helpers/types";
 import { useFocusEffect, useRouter } from "expo-router";
 import { styles } from "@/helpers/styles";
+import { chooseIcon } from "@/helpers/petsMonsters";
 
 export default function PetPage() {
     const router = useRouter();
@@ -47,15 +48,6 @@ export default function PetPage() {
     useFocusEffect(() => {
         fetchPet();
     });
-
-    const chooseIcon = (type: string) => {
-        switch (type) {
-            case "Pichi": return require("@/assets/images/pichi.png");
-            case "Char": return require("@/assets/images/char.png");
-            case "Flower": return require("@/assets/images/flower.png");
-            case "Water": return require("@/assets/images/water.png");
-        }
-    }
 
     const feedPet = async () => {
         await fetchFoodItems();

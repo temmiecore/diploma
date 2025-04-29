@@ -5,6 +5,7 @@ import { Gesture, GestureDetector, GestureHandlerRootView, TouchableWithoutFeedb
 import Animated, { useAnimatedStyle, useSharedValue, withSpring, withTiming } from 'react-native-reanimated';
 import auth from "@react-native-firebase/auth";
 import { firebase } from '@react-native-firebase/database';
+import { chooseIcon } from "@/helpers/petsMonsters";
 
 const { width, height } = Dimensions.get('window');
 
@@ -73,15 +74,6 @@ export default function PetPlayPage() {
             { rotate: `${rotation.value}deg` },
         ],
     }));
-
-    const chooseIcon = (type: string) => {
-        switch (type) {
-            case "Pichi": return require("@/assets/images/pichi.png");
-            case "Char": return require("@/assets/images/char.png");
-            case "Flower": return require("@/assets/images/flower.png");
-            case "Water": return require("@/assets/images/water.png");
-        }
-    };
 
     // doesn't work properly
     useEffect(() => {
