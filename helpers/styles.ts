@@ -14,7 +14,7 @@ export const styles = StyleSheet.create({
   scrollContainer: {
     padding: 24,
     paddingBottom: 100,
-    alignItems: 'center'
+    alignItems: "center",
   },
 
   // Headers & Titles
@@ -376,18 +376,71 @@ export const styles = StyleSheet.create({
     marginBottom: 24,
   },
   signOutButton: {
-      marginTop: 24,
-      width: '100%'
+    marginTop: 24,
+    width: "100%",
   },
   saveButton: {
-      position: 'absolute',
-      bottom: 20,
-      left: 20,
-      right: 20,
-      backgroundColor: '#4e8cff',
-      padding: 16,
-      borderRadius: 50,
-      alignItems: 'center',
-      justifyContent: 'center'
+    position: "absolute",
+    bottom: 20,
+    left: 20,
+    right: 20,
+    backgroundColor: "#4e8cff",
+    padding: 16,
+    borderRadius: 50,
+    alignItems: "center",
+    justifyContent: "center",
   },
+
+  sectionTitle: { fontSize: 20, marginTop: 20 },
+  list: { marginTop: 10 },
+  itemCard: {
+    backgroundColor: "#f0f0f0",
+    padding: 16,
+    marginRight: 12,
+    borderRadius: 12,
+    width: 120,
+    alignItems: "center",
+  },
+  itemName: { fontSize: 16, fontWeight: "bold" },
+  itemPrice: { fontSize: 14, color: "gray" },
+  modalBackground: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.4)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalCard: {
+    backgroundColor: "white",
+    padding: 20,
+    width: "80%",
+    borderRadius: 16,
+    alignItems: "center",
+  },
+  modalTitle: { fontSize: 22, fontWeight: "bold" },
+  modalButtons: {
+    flexDirection: "row",
+    marginTop: 20,
+    gap: 10,
+  },
+  buyButton: {
+    backgroundColor: "#4CAF50",
+    padding: 10,
+    borderRadius: 10,
+  },
+  cancelButton: {
+    backgroundColor: "#f44336",
+    padding: 10,
+    borderRadius: 10,
+  },
+
+
+
+
+  itemRow: {
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderColor: "#ccc",
+    flexDirection: "row",
+    justifyContent: "space-between"
+},
 });

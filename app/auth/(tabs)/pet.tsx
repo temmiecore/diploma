@@ -1,9 +1,9 @@
-import { Button, Image, Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Button, Image, Modal, StyleSheet, Text, TextInput, TouchableOpacity, View, FlatList } from "react-native";
 import auth from "@react-native-firebase/auth";
 import { firebase } from '@react-native-firebase/database';
 import { useEffect, useState } from "react";
-import { Pet } from "@/helpers/types";
-import { useRouter } from "expo-router";
+import { InventoryItem, Pet } from "@/helpers/types";
+import { useFocusEffect, useRouter } from "expo-router";
 import { styles } from "@/helpers/styles";
 
 export default function PetPage() {
@@ -11,6 +11,9 @@ export default function PetPage() {
     const [pet, setPet] = useState<Pet>();
     const [namePetMenuVisible, setNamePetMenuVisible] = useState<boolean>(false);
     const [petName, setPetName] = useState<string>("");
+
+    const [foodItems, setFoodItems] = useState<any[]>([]);
+    const [isFoodModalVisible, setIsFoodModalVisible] = useState(false);
 
     const database = firebase
         .app()
@@ -21,7 +24,7 @@ export default function PetPage() {
         const userId = auth().currentUser?.uid;
         const reference = database.ref(`/users/${userId}/pet`);
 
-        reference.on('value', snapshot => {
+        reference.once('value', snapshot => {
             const data = snapshot.val();
             if (!data) {
                 return;
@@ -31,9 +34,19 @@ export default function PetPage() {
         })
     };
 
-    useEffect(() => {
+    const fetchFoodItems = async () => {
+        const userId = auth().currentUser?.uid;
+        const snapshot = await database.ref(`/users/${userId}/items`).once("value");
+        const data = snapshot.val() || {};
+        const foodList = Object.entries(data)
+            .filter(([_, item]: any) => item.type === "food" && item.amount > 0)
+            .map(([id, item]: any) => ({ id, ...item }));
+        setFoodItems(foodList);
+    };
+
+    useFocusEffect(() => {
         fetchPet();
-    }, []);
+    });
 
     const chooseIcon = (type: string) => {
         switch (type) {
@@ -45,16 +58,32 @@ export default function PetPage() {
     }
 
     const feedPet = async () => {
-        // IF USER HAS FOOD AVAILABLE
+        await fetchFoodItems();
+        setIsFoodModalVisible(true);
+    }
+
+    const useFoodItem = async (item: any) => {
         const userId = auth().currentUser?.uid;
 
-        await database
-            .ref(`/users/${userId}/pet`)
-            .update({ lastFedDate: new Date().toISOString() })
+        const newHealth = Math.min(pet?.health + item.health, pet?.maxHealth || 100);
+        await database.ref(`/users/${userId}/pet`).update({
+            health: newHealth,
+            lastFedDate: new Date().toISOString()
+        });
 
+        const currentAmount = item.amount || 1;
+        if (currentAmount > 1) {
+            await database.ref(`/users/${userId}/items/${item.id}`).update({
+                amount: currentAmount - 1
+            });
+        } else {
+            await database.ref(`/users/${userId}/items/${item.id}`).remove();
+        }
+
+        setIsFoodModalVisible(false);
         fetchPet();
-        determineStatus(pet?.lastFedDate, pet?.lastPlayedDate);
-    }
+    };
+
 
     const determineStatus = (lastFedDateString: string, lastPlayedDateString: string) => {
         const oneDayAgo = new Date(new Date().getTime() - 24 * 60 * 60 * 1000);
@@ -122,14 +151,18 @@ export default function PetPage() {
             </TouchableOpacity>
 
             <View style={styles.buttonRow}>
-                <TouchableOpacity style={[styles.button, {flex: 1}]} onPress={() => router.navigate("../petPlay")}>
+                <TouchableOpacity style={[styles.button, { flex: 1 }]} onPress={() => router.navigate("../petPlay")}>
                     <Text style={styles.buttonText}>Play with pet</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={[styles.button, {flex: 1}]} onPress={() => router.navigate("../petBattle")}>
+                <TouchableOpacity style={[styles.button, { flex: 1 }]} onPress={() => router.navigate("../petBattle")}>
                     <Text style={styles.buttonText}>Go on adventure!</Text>
                 </TouchableOpacity>
             </View>
+
+            <TouchableOpacity style={[styles.button, { width: "80%" }]} onPress={() => { router.navigate("../inventory") }}>
+                <Text style={styles.buttonText}> Inventory </Text>
+            </TouchableOpacity>
 
             <Modal visible={namePetMenuVisible} transparent animationType="fade">
                 <TouchableOpacity style={styles.modalOverlay} onPress={() => setNamePetMenuVisible(false)}>
@@ -141,6 +174,31 @@ export default function PetPage() {
                             onChangeText={setPetName}
                         />
                         <Button title="Apply" onPress={() => { handlePetNameChange(); setNamePetMenuVisible(false) }} />
+                    </View>
+                </TouchableOpacity>
+            </Modal>
+
+            <Modal visible={isFoodModalVisible} transparent animationType="slide">
+                <TouchableOpacity style={styles.modalOverlay} onPress={() => setIsFoodModalVisible(false)}>
+                    <View style={[styles.menu, { maxHeight: 400 }]}>
+                        <Text style={{ fontSize: 16, marginBottom: 10 }}>Choose a food item:</Text>
+                        {foodItems.length === 0 ? (
+                            <Text>No food items available!</Text>
+                        ) : (
+                            <FlatList
+                                data={foodItems}
+                                keyExtractor={(item) => item.id}
+                                renderItem={({ item }) => (
+                                    <TouchableOpacity
+                                        style={styles.itemRow}
+                                        onPress={() => useFoodItem(item)}
+                                    >
+                                        <Text>{item.name} (+{item.health} HP)</Text>
+                                        <Text style={{ color: "#555" }}>x{item.quantity}</Text>
+                                    </TouchableOpacity>
+                                )}
+                            />
+                        )}
                     </View>
                 </TouchableOpacity>
             </Modal>

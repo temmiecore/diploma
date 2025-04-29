@@ -58,35 +58,48 @@ export default function TasksPage() {
 
     const handleTaskCompletion = async (taskId: string) => {
         const userId = auth().currentUser?.uid;
+        const taskRef = database.ref(`/users/${userId}/tasks/${taskId}`);
+        const snapshot = await taskRef.once("value");
+        const taskData = snapshot.val();
 
-        const snapshot = await database
-            .ref(`/users/${userId}/tasks/${taskId}`)
-            .once("value");
+        const isTaskRepeatable = taskData.isRepeated;
+        const difficulty = taskData.difficulty || 'easy';
 
-        const isTaskRepeatable = await snapshot.val().isRepeated;
-        console.log(isTaskRepeatable);
+        let coinReward = 0;
+        switch (difficulty.toLowerCase()) {
+            case 'easy':
+                coinReward = 2;
+                break;
+            case 'medium':
+                coinReward = 4;
+                break;
+            case 'hard':
+                coinReward = 6;
+                break;
+            default:
+                coinReward = 2;
+        }
 
         if (isTaskRepeatable) {
-            const previousDeadline = await snapshot.val().deadline;
-            const taskRepeatInterval = await Number.parseInt(snapshot.val().repeatInterval);
-            // console.log(taskRepeatInterval);
+            const previousDeadline = new Date(taskData.deadline);
+            const taskRepeatInterval = parseInt(taskData.repeatInterval || '1');
             const newDeadline = new Date(previousDeadline);
             newDeadline.setDate(newDeadline.getDate() + taskRepeatInterval);
 
-            await database
-                .ref(`/users/${userId}/tasks/${taskId}`)
-                .update({ deadline: newDeadline.toISOString() })
-
-            fetchTasks();
+            await taskRef.update({ deadline: newDeadline.toISOString() });
+        } else {
+            await taskRef.update({ isCompleted: true });
         }
-        else {
-            await database
-                .ref(`/users/${userId}/tasks/${taskId}`)
-                .update({ isCompleted: true })
 
-            fetchTasks();
-        }
-    }
+        // Coins
+        const coinsSnapshot = await database.ref(`/users/${userId}/coins`).once("value");
+        const currentCoins = coinsSnapshot.val() || 0;
+
+        await database.ref(`/users/${userId}/coins`).set(currentCoins + coinReward);
+
+        fetchTasks();
+    };
+
 
     const handleTaskOpenAddWindow = () => {
         router.navigate("../addTask");
