@@ -210,9 +210,9 @@ export const styles = StyleSheet.create({
     alignItems: "center",
   },
   petImage: {
-    width: "100%",
-    height: "100%",
-    resizeMode: "cover",
+    width: "80%",
+    height: "80%",
+    resizeMode: "contain"
   },
   imageWrapper: {
     width: 150,
@@ -222,6 +222,8 @@ export const styles = StyleSheet.create({
     marginBottom: 20,
     borderWidth: 3,
     borderColor: "#ccc",
+    alignItems: "center",
+    justifyContent: "center",
   },
   petName: {
     fontSize: 24,
