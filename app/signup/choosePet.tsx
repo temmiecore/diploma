@@ -1,4 +1,4 @@
-import { chooseIcon, pets } from "@/helpers/petsMonsters";
+import { chooseIcon, pets } from "@/helpers/pets";
 import { Pet } from "@/helpers/types";
 import { useUserStore } from "@/helpers/useUserStore";
 import { useRouter } from "expo-router";
@@ -80,10 +80,8 @@ export default function choosePet() {
 const styles = StyleSheet.create({
     container: {
         marginHorizontal: 20,
-        flex: 1,
     },
     inner: {
-        flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
         padding: 24,
@@ -105,14 +103,16 @@ const styles = StyleSheet.create({
         padding: 8,
         marginHorizontal: 8,
         backgroundColor: '#f0f0f0',
+        height: "100%",
+        
     },
     petIconSelected: {
         borderColor: '#4e8cff',
         backgroundColor: '#e0f0ff',
     },
     petIcon: {
-        width: 80,
-        height: 80,
+        width: 160,
+        height: 160,
         resizeMode: 'contain',
     },
     petDetails: {

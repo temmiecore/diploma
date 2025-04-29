@@ -5,7 +5,7 @@ import { firebase } from '@react-native-firebase/database';
 import { Pet } from '@/helpers/types';
 import { useRouter } from 'expo-router';
 import Animated, { useAnimatedStyle, useSharedValue, withSpring, withTiming, runOnJS } from 'react-native-reanimated';
-import { chooseIcon } from '@/helpers/petsMonsters';
+import { chooseIcon } from '@/helpers/pets';
 
 export default function PetBattlePage() {
     const [monster, setMonster] = useState<Monster | null>(null);
@@ -173,18 +173,26 @@ export default function PetBattlePage() {
     };
 
     return (
-        <View style={{ flex: 1 }}>
-            <Text>Pet HP: {petHealth}</Text>
-            <Text>Monster HP: {monsterHealth}</Text>
-            <Image source={chooseIcon(pet?.type)} style={{ width: 100, height: 100 }} />
-            <Image source={monster?.sprite} style={{ width: 100, height: 100 }} />
+        <View style={{ flex: 1, backgroundColor: '#d0e7f9', padding: 32 }}>
+            <View style={{ alignItems: 'flex-end', marginTop: 40 }}>
+                <View style={{ backgroundColor: '#fff', padding: 8, borderRadius: 8, marginBottom: 4 }}>
+                    <Text style={{ fontWeight: 'bold', fontSize: 20 }}>{monster?.name || "Monster"}</Text>
+                    <Text>HP: {monsterHealth} / {monster?.health}</Text>
+                </View>
+                <Image source={monster?.sprite} style={{ width: 160, height: 160 }} />
+            </View>
 
-            {/* Attack Points Circles */}
+            <View style={{ flex: 1 }} />
+
+            <View style={{ flexDirection: 'row', alignItems: 'flex-end', marginBottom: 128 }}>
+                <Image source={chooseIcon(pet?.type)} style={{ width: 160, height: 160 }} />
+                <View style={{ marginLeft: 12, backgroundColor: '#fff', padding: 8, borderRadius: 8 }}>
+                    <Text style={{ fontWeight: 'bold', fontSize: 20 }}>{pet?.name || "Your Pet"}</Text>
+                    <Text>HP: {petHealth} / {pet?.maxHealth}</Text>
+                </View>
+            </View>
+
             <AttackPointManager onCircleHit={onCircleHit} battleEnded={battleEnded} />
-            {/* You could add a button to leave manually */}
-            {/* <TouchableOpacity onPress={() => router.back()}> */}
-            {/*     <Text>Leave Battle</Text> */}
-            {/* </TouchableOpacity> */}
         </View>
     );
 }

@@ -5,7 +5,7 @@ import { Gesture, GestureDetector, GestureHandlerRootView, TouchableWithoutFeedb
 import Animated, { useAnimatedStyle, useSharedValue, withSpring, withTiming } from 'react-native-reanimated';
 import auth from "@react-native-firebase/auth";
 import { firebase } from '@react-native-firebase/database';
-import { chooseIcon } from "@/helpers/petsMonsters";
+import { chooseIcon } from "@/helpers/pets";
 
 const { width, height } = Dimensions.get('window');
 

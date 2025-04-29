@@ -2,20 +2,10 @@ import { ShopItem } from "@/helpers/types";
 import { useEffect, useState } from "react";
 import auth from "@react-native-firebase/auth";
 import { firebase } from '@react-native-firebase/database';
-import { Alert, FlatList, Modal, Text, TouchableOpacity, View } from "react-native";
+import { Alert, FlatList, Image, Modal, Text, TouchableOpacity, View } from "react-native";
 import { styles } from "@/helpers/styles";
 import { useFocusEffect, useRouter } from "expo-router";
-
-const foodItems = [
-    { id: "apple", name: "Juicy Apple", type: "food", price: 10, health: 10 },
-    { id: "carrot", name: "Crisp Carrot", type: "food", price: 15, health: 25 },
-    { id: "pie", name: "Mysterious Pie", type: "food", price: 20, health: 50 },
-];
-
-const vanityItems = [
-    { id: 'hat_red', name: 'Red Hat', type: 'vanity', price: 50 },
-    { id: 'glasses_sun', name: 'Sunglasses', type: 'vanity', price: 75 },
-];
+import { chooseItemSprite, foodItems, vanityItems } from "@/helpers/items";
 
 export default function ShopPage() {
     const [coins, setCoins] = useState<number>(0);
@@ -53,9 +43,10 @@ export default function ShopPage() {
                 setSelectedItem(item);
                 setIsModalVisible(true);
             }}>
+            <Image source={chooseItemSprite(item.id)} style={{ width: 64, height: 64 }}></Image>
             <Text style={styles.itemName}>{item.name}</Text>
             <Text style={styles.itemPrice}>{item.price}🪙</Text>
-            { item.type == "food" && <Text style={styles.itemPrice}>Regenerates {item.health} HP.</Text> }
+            {item.type == "food" && <Text style={styles.itemPrice}>Regenerates {item.health} HP.</Text>}
         </TouchableOpacity>
     );
 
@@ -90,23 +81,26 @@ export default function ShopPage() {
                 <Text style={styles.headerTitle}>Shop</Text>
                 <Text style={styles.headerTitle}>{coins}🪙</Text>
             </View>
-            <Text style={styles.sectionTitle}>Food</Text>
-            <FlatList
-                data={foodItems}
-                horizontal
-                renderItem={renderItem}
-                keyExtractor={(item) => item.id}
-                style={styles.list}
-            />
 
-            <Text style={styles.sectionTitle}>Vanity</Text>
-            <FlatList
-                data={vanityItems}
-                horizontal
-                renderItem={renderItem}
-                keyExtractor={(item) => item.id}
-                style={styles.list}
-            />
+            <View style={{ padding: 16 }}>
+                <Text style={styles.sectionTitle}>Food</Text>
+                <FlatList
+                    data={foodItems}
+                    horizontal
+                    renderItem={renderItem}
+                    keyExtractor={(item) => item.id}
+                    style={styles.list}
+                />
+
+                <Text style={styles.sectionTitle}>Vanity</Text>
+                <FlatList
+                    data={vanityItems}
+                    horizontal
+                    renderItem={renderItem}
+                    keyExtractor={(item) => item.id}
+                    style={styles.list}
+                />
+            </View>
 
             <Modal visible={isModalVisible} transparent animationType="slide">
                 <View style={styles.modalBackground}>

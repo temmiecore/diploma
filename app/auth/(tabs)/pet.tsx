@@ -1,11 +1,11 @@
 import { Button, Image, Modal, StyleSheet, Text, TextInput, TouchableOpacity, View, FlatList } from "react-native";
 import auth from "@react-native-firebase/auth";
 import { firebase } from '@react-native-firebase/database';
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { InventoryItem, Pet } from "@/helpers/types";
 import { useFocusEffect, useRouter } from "expo-router";
 import { styles } from "@/helpers/styles";
-import { chooseIcon } from "@/helpers/petsMonsters";
+import { chooseIcon } from "@/helpers/pets";
 
 export default function PetPage() {
     const router = useRouter();
@@ -45,9 +45,12 @@ export default function PetPage() {
         setFoodItems(foodList);
     };
 
-    useFocusEffect(() => {
-        fetchPet();
-    });
+    useFocusEffect(
+        useCallback(() => {
+            fetchPet();
+        }, []) // Empty dependency array = run only on screen focus
+    );
+    
 
     const feedPet = async () => {
         await fetchFoodItems();

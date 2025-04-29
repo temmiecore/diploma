@@ -396,6 +396,7 @@ export const styles = StyleSheet.create({
   sectionTitle: { fontSize: 20, marginTop: 20 },
   list: { marginTop: 10 },
   itemCard: {
+    flexDirection: "column",
     backgroundColor: "#f0f0f0",
     padding: 16,
     marginRight: 12,
