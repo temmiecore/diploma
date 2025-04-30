@@ -3,6 +3,7 @@ import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, Vi
 import { Picker } from '@react-native-picker/picker';
 import { useRouter } from "expo-router";
 import { useUserStore } from "@/helpers/useUserStore";
+import { styles } from "@/helpers/styles";
 
 export default function PersonalInformation() {
     const [name, setName] = useState<string>('');
@@ -22,30 +23,30 @@ export default function PersonalInformation() {
     };
 
     return (
-        <View style={styles.container}>
-            <KeyboardAvoidingView style={styles.inner} behavior="padding">
-                <Text style={styles.titleTop}>Personal Information</Text>
-                <Text style={styles.title}>Now, we just need a couple more things!</Text>
+        <View style={[styles.containerStretched, { paddingHorizontal: 24 }]}>
+            <KeyboardAvoidingView style={styles.containerInner} behavior="padding">
+                <Text style={[styles.title, { marginBottom: 6 }]}>Personal Information</Text>
+                <Text style={[styles.titleSecondary, { marginBottom: 24 }]}>Now, we just need a couple more things!</Text>
 
-                <Text style={styles.text}>Name. Doesn't have to be your legal one, just use whatever you prefer!</Text>
+                <Text style={styles.label}>Name. Doesn't have to be your legal one, just use whatever you prefer!</Text>
                 <TextInput
-                    style={styles.input}
+                    style={[styles.input, { width: "100%" }]}
                     placeholder="Your name"
                     value={name}
                     onChangeText={setName}
                 />
 
-                <Text style={styles.text}>Age. Optional</Text>
+                <Text style={styles.label}>Age. Optional</Text>
                 <TextInput
-                    style={styles.input}
+                    style={[styles.input, { width: "100%" }]}
                     placeholder="Your age"
                     value={age}
                     onChangeText={setAge}
                     keyboardType="numeric"
                 />
 
-                <Text style={styles.text}>Gender. Optional</Text>
-                <View style={styles.pickerContainer}>
+                <Text style={styles.label}>Gender. Optional</Text>
+                <View style={[styles.pickerContainer, { width: "100%" }]}>
                     <Picker
                         selectedValue={gender}
                         onValueChange={(itemValue) => setGender(itemValue)}
@@ -58,79 +59,10 @@ export default function PersonalInformation() {
                     </Picker>
                 </View>
 
-                <TouchableOpacity style={styles.button} onPress={handleNext}>
+                <TouchableOpacity style={[styles.button, { width: "100%" }]} onPress={handleNext}>
                     <Text style={styles.buttonText}>Next</Text>
                 </TouchableOpacity>
             </KeyboardAvoidingView>
         </View>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        marginHorizontal: 20,
-        flex: 1,
-    },
-    inner: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: 24,
-        backgroundColor: '#fff',
-    },
-    titleTop: {
-        fontSize: 28,
-        marginBottom: 24,
-        fontWeight: '600',
-        color: '#333',
-    },
-    title: {
-        fontSize: 20,
-        marginBottom: 24,
-        fontWeight: '500',
-        color: '#333',
-        textAlign: 'center',
-    },
-    text: {
-        marginBottom: 8,
-        fontSize: 16,
-        alignSelf: 'flex-start',
-    },
-    input: {
-        width: '100%',
-        height: 50,
-        backgroundColor: '#f0f0f0',
-        borderRadius: 10,
-        borderWidth: 1,
-        paddingHorizontal: 16,
-        marginBottom: 16,
-        fontSize: 16,
-    },
-    pickerContainer: {
-        width: '100%',
-        borderWidth: 1,
-        borderRadius: 10,
-        borderColor: '#ccc',
-        marginBottom: 16,
-        overflow: 'hidden',
-        backgroundColor: '#f0f0f0',
-    },
-    picker: {
-        height: 50,
-        width: '100%',
-    },
-    button: {
-        width: '100%',
-        height: 50,
-        backgroundColor: '#4e8cff',
-        borderRadius: 10,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginTop: 8,
-    },
-    buttonText: {
-        color: '#fff',
-        fontSize: 18,
-        fontWeight: '600',
-    },
-});

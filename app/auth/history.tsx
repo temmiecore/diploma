@@ -60,9 +60,9 @@ export default function HistoryPage() {
     };
 
     return (
-        <View style={[styles.container, {padding: 20}]}>
+        <View style={[styles.container, { padding: 20 }]}>
             <TouchableOpacity onPress={() => router.back()} style={styles.exitButton}>
-                <Text style={styles.exitText}>Exit</Text>
+                <Text style={{ color: "red", fontSize: 16 }}>Exit</Text>
             </TouchableOpacity>
 
             <FlatList

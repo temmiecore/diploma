@@ -104,32 +104,30 @@ export default function ProfilePage() {
     };
 
     return (
-        <View style={styles.container}>
+        <View style={styles.containerStretched}>
             <ScrollView contentContainerStyle={styles.scrollContainer}>
                 <TouchableOpacity onPress={handleImageChange}>
                     <Image source={require("@/assets/images/placeholder_pfp.png")} style={styles.profileImage} />
                 </TouchableOpacity>
 
-                <Text style={styles.label}>Name</Text>
+                <Text style={styles.text}>Name</Text>
                 <TextInput
-                    style={styles.input}
+                    style={[styles.input, { width: "100%" }]}
                     value={name}
                     onChangeText={setName}
                     placeholder="Your name"
                 />
 
-
-                <Text style={styles.label}>Age</Text>
+                <Text style={styles.text}>Age</Text>
                 <TextInput
-                    style={styles.input}
+                    style={[styles.input, { width: "100%" }]}
                     value={age}
                     onChangeText={setAge}
                     placeholder="Your name"
                 />
 
-
-                <Text style={styles.label}>Gender</Text>
-                <View style={styles.pickerContainer}>
+                <Text style={styles.text}>Gender</Text>
+                <View style={[styles.pickerContainer, { width: "100%" }]}>
                     <Picker
                         selectedValue={gender}
                         onValueChange={(itemValue) => setGender(itemValue)}
@@ -142,53 +140,53 @@ export default function ProfilePage() {
                     </Picker>
                 </View>
 
-                <Text style={styles.label}>Email</Text>
+                <Text style={styles.text}>Email</Text>
                 <TextInput
-                    style={styles.input}
+                    style={[styles.input, { width: "100%" }]}
                     value={email}
                     onChangeText={setEmail}
                     placeholder="Your email"
                     keyboardType="email-address"
                 />
 
-                <Text style={styles.label}>Current Password</Text>
+                <Text style={styles.text}>Current Password</Text>
                 <TextInput
-                    style={styles.input}
+                    style={[styles.input, { width: "100%" }]}
                     value={currentPassword}
                     onChangeText={setCurrentPassword}
                     placeholder="**********"
                     secureTextEntry
                 />
 
-                <Text style={styles.label}>New Password</Text>
+                <Text style={styles.text}>New Password</Text>
                 <TextInput
-                    style={styles.input}
+                    style={[styles.input, { width: "100%" }]}
                     value={newPassword1}
                     onChangeText={setNewPassword1}
                     placeholder="**********"
                     secureTextEntry
                 />
 
-                <Text style={styles.label}>New Password, Again</Text>
+                <Text style={styles.text}>New Password, Again</Text>
                 <TextInput
-                    style={styles.input}
+                    style={[styles.input, { width: "100%" }]}
                     value={newPassword2}
                     onChangeText={setNewPassword2}
                     placeholder="**********"
                     secureTextEntry
                 />
 
-                <View style={styles.switchContainer}>
-                    <Text style={styles.label}>Dark Mode</Text>
+                <View style={{ flexDirection: "row" }}>
+                    <Text style={styles.text}>Dark Mode</Text>
                     <Switch
                         value={darkMode}
                         onValueChange={setDarkMode}
                     />
                 </View>
 
-                <View style={styles.signOutButton}>
-                    <Button onPress={signOut} title="Sign Out" color="#ff5252" />
-                </View>
+                <TouchableOpacity style={[styles.signOutButton, { width: "100%" }]} onPress={signOut}>
+                    <Text style={styles.buttonText}>Sign Out</Text>
+                </TouchableOpacity>
             </ScrollView>
 
             <TouchableOpacity style={styles.saveButton} onPress={handleSaveChanges}>

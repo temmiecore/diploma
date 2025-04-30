@@ -65,7 +65,7 @@ export default function AddTaskPage() {
         <View style={styles.container}>
             <ScrollView contentContainerStyle={{ padding: 20, paddingBottom: 40 }}>
                 <TouchableOpacity onPress={() => router.back()} style={styles.exitButton}>
-                    <Text style={styles.exitText}>Exit</Text>
+                    <Text style={{ color: "red", fontSize: 16 }}>Exit</Text>
                 </TouchableOpacity>
 
                 <Text style={styles.title}>Add a task</Text>
@@ -121,7 +121,7 @@ export default function AddTaskPage() {
                     ))}
                 </View>
 
-                <View style={styles.switchContainer}>
+                <View style={{display: "flex", flexDirection: "row", justifyContent: "space-between"}}>
                     <Text style={styles.label}>Is it repeatable?</Text>
                     <Switch value={isRepeated} onValueChange={setIsRepeated} />
                 </View>

@@ -124,10 +124,10 @@ export default function MainPage() {
                 <Text style={styles.taskDeadline}>Deadline: {item.deadline}</Text>
                 <Text style={styles.taskTags}>Tags: {item.tags.join(', ')}</Text>
                 <TouchableOpacity
-                    style={styles.completeButton}
+                    style={styles.button}
                     onPress={() => handleTaskCompletion(item.id)}
                 >
-                    <Text style={styles.completeButtonText}>Complete</Text>
+                    <Text style={styles.buttonText}>Complete</Text>
                 </TouchableOpacity>
             </View>
         );
@@ -166,7 +166,7 @@ export default function MainPage() {
     };
 
     return (
-        <View style={styles.container}>
+        <View style={styles.containerStretched}>
             <View style={styles.header}>
                 <Text style={styles.headerTitle}>Today's tasks</Text>
                 <View style={styles.headerButtons}>
@@ -183,7 +183,7 @@ export default function MainPage() {
                 data={tasks}
                 renderItem={renderTask}
                 keyExtractor={item => item.id}
-                ListEmptyComponent={<Text style={{ textAlign: 'center' }}>No tasks for today!</Text>}
+                ListEmptyComponent={<Text style={{ textAlign: 'center', marginTop: 16 }}>No tasks for today!</Text>}
             />
             <TouchableOpacity
                 style={styles.addButton}
@@ -216,7 +216,7 @@ export default function MainPage() {
                     <View style={styles.menu}>
                         <Text style={{ fontSize: 16, marginBottom: 8 }}>Enter tag to filter:</Text>
                         <TextInput
-                            style={styles.textInput}
+                            style={styles.input}
                             placeholder="e.g. work"
                             value={tagFilter}
                             onChangeText={setTagFilter}

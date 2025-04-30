@@ -2,7 +2,7 @@ import { ShopItem } from "@/helpers/types";
 import { useEffect, useState } from "react";
 import auth from "@react-native-firebase/auth";
 import { firebase } from '@react-native-firebase/database';
-import { Alert, FlatList, Image, Modal, Text, TouchableOpacity, View } from "react-native";
+import { Alert, FlatList, Image, Modal, Text, ToastAndroid, TouchableOpacity, View } from "react-native";
 import { styles } from "@/helpers/styles";
 import { useFocusEffect, useRouter } from "expo-router";
 import { chooseItemSprite, foodItems, vanityItems } from "@/helpers/items";
@@ -72,40 +72,40 @@ export default function ShopPage() {
 
         setCoins(prev => prev - item.price);
         setIsModalVisible(false);
-        Alert.alert("Purchased", `${item.name} added to your inventory.`);
+        ToastAndroid.show(`${item.name} added to your inventory.`, ToastAndroid.SHORT); // won't work on android
     };
 
     return (
-        <View style={styles.container}>
+        <View style={styles.containerStretched}>
             <View style={styles.header}>
                 <Text style={styles.headerTitle}>Shop</Text>
                 <Text style={styles.headerTitle}>{coins}🪙</Text>
             </View>
 
             <View style={{ padding: 16 }}>
-                <Text style={styles.sectionTitle}>Food</Text>
+                <Text style={styles.titleSecondary}>Food</Text>
                 <FlatList
                     data={foodItems}
                     horizontal
                     renderItem={renderItem}
                     keyExtractor={(item) => item.id}
-                    style={styles.list}
+                    style={{ marginTop: 10 }}
                 />
 
-                <Text style={styles.sectionTitle}>Vanity</Text>
+                <Text style={[styles.titleSecondary, { marginTop: 24 }]}>Vanity</Text>
                 <FlatList
                     data={vanityItems}
                     horizontal
                     renderItem={renderItem}
                     keyExtractor={(item) => item.id}
-                    style={styles.list}
+                    style={{ marginTop: 10 }}
                 />
             </View>
 
-            <Modal visible={isModalVisible} transparent animationType="slide">
-                <View style={styles.modalBackground}>
-                    <View style={styles.modalCard}>
-                        <Text style={styles.modalTitle}>{selectedItem?.name}</Text>
+            <Modal visible={isModalVisible} transparent>
+                <View style={styles.modalOverlay}>
+                    <View style={[styles.menu, { alignItems: "center" }]}>
+                        <Text style={styles.title}>{selectedItem?.name}</Text>
                         <Text style={{ marginBottom: 10 }}>Price: {selectedItem?.price}🪙</Text>
                         {selectedItem?.type === 'food' && (
                             <Text>Health Gain: {selectedItem.health}</Text>

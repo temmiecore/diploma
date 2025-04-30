@@ -1,4 +1,5 @@
 import { chooseIcon, pets } from "@/helpers/pets";
+import { styles } from "@/helpers/styles";
 import { Pet } from "@/helpers/types";
 import { useUserStore } from "@/helpers/useUserStore";
 import { useRouter } from "expo-router";
@@ -39,9 +40,9 @@ export default function choosePet() {
     );
 
     return (
-        <View style={styles.container}>
-            <KeyboardAvoidingView style={styles.inner} behavior="padding" >
-                <Text style={styles.titleTop}>Choose your pet!</Text>
+        <View style={[styles.containerStretched, { paddingVertical: 32 }]}>
+            <KeyboardAvoidingView style={styles.containerInner} behavior="padding" >
+                <Text style={[styles.title, { marginBottom: 24 }]}>Choose your pet!</Text>
 
                 <FlatList
                     data={pets}
@@ -49,16 +50,16 @@ export default function choosePet() {
                     keyExtractor={(item) => item.id}
                     horizontal
                     showsHorizontalScrollIndicator={false}
-                    contentContainerStyle={styles.petList}
+                    contentContainerStyle={{ paddingVertical: 8, marginHorizontal: 16 }}
                 />
 
                 {selectedPet && (
                     <View style={styles.petDetails}>
-                        <Text style={styles.detailText}>Type: {selectedPet.type}</Text>
-                        <Text style={styles.detailText}>Health: {selectedPet.health}</Text>
-                        <Text style={styles.detailText}>Speed: {selectedPet.speed}</Text>
-                        <Text style={styles.detailText}>Armor: {selectedPet.armor}</Text>
-                        <Text style={styles.detailText}>Damage: {selectedPet.damage}</Text>
+                        <Text style={styles.text}>Type: {selectedPet.type}</Text>
+                        <Text style={styles.text}>Health: {selectedPet.health}</Text>
+                        <Text style={styles.text}>Speed: {selectedPet.speed}</Text>
+                        <Text style={styles.text}>Armor: {selectedPet.armor}</Text>
+                        <Text style={styles.text}>Damage: {selectedPet.damage}</Text>
                     </View>
                 )}
 
@@ -76,65 +77,3 @@ export default function choosePet() {
         </View >
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        marginHorizontal: 20,
-    },
-    inner: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: 24,
-        backgroundColor: '#fff',
-    },
-    titleTop: {
-        fontSize: 28,
-        marginBottom: 32,
-        fontWeight: '600',
-        color: '#333',
-    },
-    petList: {
-        paddingVertical: 8,
-    },
-    petIconWrapper: {
-        borderWidth: 2,
-        borderColor: 'transparent',
-        borderRadius: 12,
-        padding: 8,
-        marginHorizontal: 8,
-        backgroundColor: '#f0f0f0',
-        height: "100%",
-        
-    },
-    petIconSelected: {
-        borderColor: '#4e8cff',
-        backgroundColor: '#e0f0ff',
-    },
-    petIcon: {
-        width: 160,
-        height: 160,
-        resizeMode: 'contain',
-    },
-    petDetails: {
-        marginTop: 24,
-        alignItems: 'center',
-    },
-    detailText: {
-        fontSize: 16,
-        marginBottom: 4,
-    },
-    button: {
-        width: '100%',
-        height: 50,
-        backgroundColor: '#4e8cff',
-        borderRadius: 10,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginTop: 32,
-    },
-    buttonText: {
-        color: '#fff',
-        fontSize: 18,
-        fontWeight: '600',
-    },
-});

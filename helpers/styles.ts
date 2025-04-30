@@ -1,23 +1,162 @@
-import { StyleSheet } from "react-native";
+import { Dimensions, StyleSheet } from "react-native";
+import { lightColors } from "./colors";
+
+const { width } = Dimensions.get("window");
+const ITEM_SIZE = width / 3 - 20;
 
 export const styles = StyleSheet.create({
   // Containers
-  container: {
+  containerStretched: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: lightColors.background,
+  },
+  container: {
+    backgroundColor: lightColors.background,
   },
   containerCentered: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: lightColors.background,
   },
   scrollContainer: {
     padding: 24,
     paddingBottom: 100,
     alignItems: "center",
+    backgroundColor: lightColors.background,
   },
 
-  // Headers & Titles
+  // For keyboard avoiding view
+  containerInner: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: lightColors.background,
+  },
+
+  // Text
+  title: {
+    fontSize: 24,
+    fontWeight: "600",
+    color: lightColors.textPrimary,
+    textAlign: "center",
+  },
+  label: {
+    fontSize: 16,
+    marginBottom: 8,
+    alignSelf: "flex-start",
+    color: lightColors.textPrimary,
+  },
+  titleSecondary: {
+    fontSize: 20,
+    fontWeight: "500",
+    color: lightColors.textPrimary,
+  },
+  text: {
+    fontSize: 18,
+    marginBottom: 8,
+    color: lightColors.textPrimary,
+  },
+
+  //Buttons
+  button: {
+    backgroundColor: lightColors.buttonPrimary,
+    borderRadius: 10,
+    justifyContent: "center",
+    alignItems: "center",
+    marginVertical: 4,
+    padding: 12,
+  },
+  buttonText: {
+    color: lightColors.buttonText,
+    fontSize: 18,
+    fontWeight: "600",
+  },
+  inverseButton: {
+    borderColor: lightColors.buttonPrimary,
+    borderWidth: 2,
+    borderRadius: 10,
+    justifyContent: "center",
+    alignItems: "center",
+    marginVertical: 4,
+    padding: 12,
+  },
+  inverseButtonText: {
+    color: lightColors.buttonPrimary,
+    fontSize: 18,
+    fontWeight: "600",
+  },
+
+  // Custom buttons
+  addButton: {
+    position: "absolute",
+    bottom: 20,
+    backgroundColor: lightColors.buttonPrimary,
+    paddingHorizontal: 24,
+    borderRadius: 100,
+    alignSelf: "center",
+  },
+  addButtonText: {
+    fontSize: 64,
+    color: lightColors.buttonText,
+  },
+  signOutButton: {
+    backgroundColor: lightColors.buttonDanger,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 24,
+    padding: 8,
+  },
+  buyButton: {
+    backgroundColor: lightColors.buttonGreen,
+    padding: 10,
+    borderRadius: 10,
+  },
+  cancelButton: {
+    backgroundColor: lightColors.buttonDanger,
+    padding: 10,
+    borderRadius: 10,
+  },
+  exitButton: {
+    alignSelf: "flex-end",
+    marginBottom: 10,
+  },
+  saveButton: {
+    position: "absolute",
+    bottom: 20,
+    left: 20,
+    right: 20,
+    backgroundColor: lightColors.buttonPrimary,
+    padding: 16,
+    borderRadius: 50,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  // Inputs
+  input: {
+    backgroundColor: lightColors.backgroundSecondary,
+    borderColor: lightColors.border,
+    borderRadius: 10,
+    borderWidth: 1,
+    padding: 16,
+    marginBottom: 16,
+    fontSize: 16,
+  },
+  pickerContainer: {
+    backgroundColor: lightColors.backgroundSecondary,
+    borderColor: lightColors.border,
+    borderRadius: 10,
+    borderWidth: 1,
+    paddingHorizontal: 8,
+    marginBottom: 16,
+    overflow: "hidden",
+  },
+  picker: {
+    width: "100%",
+  },
+
+  // Header
   header: {
     flexDirection: "row",
     alignItems: "center",
@@ -25,194 +164,96 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderColor: "#ddd",
-    backgroundColor: "#fafafa",
+    borderColor: lightColors.border,
+    backgroundColor: lightColors.backgroundSecondary,
   },
   headerTitle: {
     fontSize: 24,
     fontWeight: "bold",
   },
-  title: {
-    fontSize: 24,
-    marginBottom: 32,
-    fontWeight: "600",
-    color: "#333",
-    textAlign: "center",
-  },
-  titleTop: {
-    fontSize: 28,
-    marginBottom: 32,
-    fontWeight: "600",
-    color: "#333",
-  },
-  label: {
-    marginTop: 10,
-    marginBottom: 4,
-    fontSize: 16,
-    fontWeight: "600",
+  icon: {
+    width: 32,
+    height: 32,
   },
   headerButtons: {
     flexDirection: "row",
     gap: 16,
   },
+  categories: {
+    flexDirection: "row",
+    gap: 12,
+    paddingHorizontal: 12,
+    height: 48,
+    borderBottomWidth: 1,
+    borderColor: lightColors.border,
+    marginVertical: 8,
+  },
+  categoryButton: {
+    backgroundColor: lightColors.buttonPrimary,
+    borderRadius: 10,
+    padding: 10,
+    height: 40,
+  },
+  categoryButtonText: {
+    color: lightColors.buttonText,
+    fontWeight: "600",
+  },
 
-  // Text
-  text: {
-    fontSize: 16,
-    marginBottom: 8,
-    alignSelf: "flex-start",
+  // Modal & Menu
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: lightColors.modalBackground,
+    justifyContent: "center",
+    alignItems: "center",
   },
-  exText: {
-    fontSize: 16,
-    marginTop: 8,
-    marginBottom: 20,
+  menu: {
+    backgroundColor: lightColors.background,
+    borderRadius: 8,
+    padding: 20,
+    minWidth: 220,
+    gap: 8,
   },
-  detailText: {
+  modalButtons: {
+    flexDirection: "row",
+    marginTop: 20,
+    gap: 10,
+  },
+
+  // Task Item
+  taskCard: {
+    margin: 12,
+    padding: 16,
+    backgroundColor: lightColors.backgroundSecondary,
+    borderRadius: 10,
+    elevation: 2,
+  },
+  taskTitle: {
+    fontSize: 20,
+    fontWeight: "600",
+    marginBottom: 4,
+    color: lightColors.textPrimary,
+  },
+  taskDesc: {
     fontSize: 16,
+    color: lightColors.textPrimary,
     marginBottom: 4,
   },
-  statText: {
-    fontSize: 18,
-    marginVertical: 4,
+  taskDeadline: {
+    fontSize: 14,
+    color: lightColors.textPrimary,
+    marginBottom: 4,
   },
-  statusText: {
-    fontSize: 18,
-    fontStyle: "italic",
-    marginTop: 10,
-    marginBottom: 30,
-  },
-  exitText: {
-    color: "red",
-    fontSize: 16,
-  },
-
-  // Inputs
-  input: {
-    width: "100%",
-    height: 50,
-    backgroundColor: "#f0f0f0",
-    borderRadius: 10,
-    borderWidth: 1,
-    paddingHorizontal: 16,
-    marginBottom: 16,
-    fontSize: 16,
-  },
-  textInput: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    padding: 8,
-    borderRadius: 6,
-    marginBottom: 12,
-  },
-  pickerContainer: {
-    width: "100%",
-    borderWidth: 1,
-    borderRadius: 10,
-    borderColor: "#ccc",
-    marginBottom: 16,
-    overflow: "hidden",
-    backgroundColor: "#f0f0f0",
-  },
-  picker: {
-    height: 50,
-    width: "100%",
-  },
-
-  // Buttons
-  button: {
-    width: "100%",
-    height: 50,
-    backgroundColor: "#4e8cff",
-    borderRadius: 10,
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 8,
-  },
-  buttonText: {
-    color: "#fff",
-    fontSize: 18,
-    fontWeight: "600",
-  },
-  googleButton: {
-    width: "100%",
-    height: 50,
-    borderColor: "#4e8cff",
-    borderWidth: 1.5,
-    borderRadius: 10,
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 12,
-  },
-  googleButtonText: {
-    color: "#4e8cff",
-    fontSize: 16,
-    fontWeight: "500",
-  },
-  completeButton: {
-    backgroundColor: "#4e8cff",
-    padding: 10,
-    borderRadius: 8,
-    alignItems: "center",
-  },
-  completeButtonText: {
-    color: "#fff",
-    fontWeight: "600",
-  },
-  feedButton: {
-    backgroundColor: "#4CAF50",
-    padding: 12,
-    borderRadius: 8,
-    marginHorizontal: 5,
+  taskTags: {
+    fontSize: 14,
+    color: lightColors.textLight,
     marginBottom: 8,
-    alignItems: "center",
-  },
-  addButton: {
-    position: "absolute",
-    bottom: 20,
-    backgroundColor: "#4e8cff",
-    paddingHorizontal: 24,
-    borderRadius: 100,
-    alignSelf: "center",
-  },
-  addButtonText: {
-    fontSize: 64,
-    color: "#fff",
   },
 
-  // Pet / Task View
-  pet: {
-    width: 120,
-    height: 120,
-    position: "absolute",
-  },
-  petList: {
-    paddingVertical: 8,
-  },
-  petIconWrapper: {
-    borderWidth: 2,
-    borderColor: "transparent",
-    borderRadius: 12,
-    padding: 8,
-    marginHorizontal: 8,
-    backgroundColor: "#f0f0f0",
-  },
-  petIconSelected: {
-    borderColor: "#4e8cff",
-    backgroundColor: "#e0f0ff",
-  },
-  petIcon: {
-    width: 160,
-    height: 160,
-    resizeMode: "contain",
-  },
-  petDetails: {
-    marginTop: 24,
-    alignItems: "center",
-  },
+  // Pet
   petImage: {
     width: "80%",
     height: "80%",
-    resizeMode: "contain"
+    resizeMode: "contain",
   },
   imageWrapper: {
     width: 150,
@@ -221,111 +262,60 @@ export const styles = StyleSheet.create({
     overflow: "hidden",
     marginBottom: 20,
     borderWidth: 3,
-    borderColor: "#ccc",
+    borderColor: lightColors.border,
     alignItems: "center",
     justifyContent: "center",
   },
-  petName: {
-    fontSize: 24,
-    marginVertical: 4,
-  },
 
-  // Task Card
-  taskCard: {
-    margin: 12,
+  // Shop Item
+  itemCard: {
+    flexDirection: "column",
+    backgroundColor: lightColors.backgroundSecondary,
     padding: 16,
-    backgroundColor: "#f9f9f9",
+    marginRight: 12,
+    borderRadius: 12,
+    width: 120,
+    alignItems: "center",
+  },
+  itemName: { fontSize: 16, fontWeight: "bold" },
+  itemPrice: { fontSize: 14, color: lightColors.textLight },
+
+  // Inventory
+  grid: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  item: {
+    width: ITEM_SIZE,
+    height: ITEM_SIZE + 20,
+    margin: 10,
     borderRadius: 10,
+    backgroundColor: lightColors.backgroundSecondary,
+    justifyContent: "center",
+    alignItems: "center",
     elevation: 2,
-  },
-  taskTitle: {
-    fontSize: 20,
-    fontWeight: "600",
-    marginBottom: 4,
-  },
-  taskDesc: {
-    fontSize: 16,
-    color: "#555",
-    marginBottom: 4,
-  },
-  taskDeadline: {
-    fontSize: 14,
-    color: "#777",
-    marginBottom: 4,
-  },
-  taskTags: {
-    fontSize: 14,
-    color: "#999",
-    marginBottom: 8,
-  },
-
-  // Footer / Navigation
-  footer: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    padding: 14,
-    borderTopWidth: 1,
-    borderColor: "#ddd",
-    backgroundColor: "#fafafa",
-  },
-  icon: {
-    width: 32,
-    height: 32,
-  },
-
-  // Utility
-  inner: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 24,
-    backgroundColor: "#fff",
-  },
-  exitButton: {
-    alignSelf: "flex-end",
-    marginBottom: 10,
-  },
-  doneContainer: {
-    position: "absolute",
-    bottom: 40,
-    alignItems: "center",
-  },
-  doneText: {
-    fontSize: 18,
-    marginBottom: 10,
-  },
-
-  // Progress
-  progressBarContainer: {
-    width: "80%",
-    height: 12,
-    backgroundColor: "black",
-    borderRadius: 10,
-    overflow: "hidden",
-    marginTop: 20,
-  },
-  progressBarFill: {
-    height: 12,
-    backgroundColor: "#4CAF50",
-    borderRadius: 10,
-  },
-
-  // Modal & Menu
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: "rgba(0,0,0,0.3)",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  menu: {
-    backgroundColor: "#fff",
-    borderRadius: 8,
-    padding: 20,
-    minWidth: 220,
-    gap: 8,
   },
 
   // Misc
+  petDetails: {
+    marginVertical: 12,
+    alignItems: "center",
+    borderRadius: 10,
+    borderColor: lightColors.border,
+  },
+  profileImage: {
+    width: 150,
+    height: 150,
+    borderRadius: 75,
+    marginBottom: 24,
+  },
+  itemRow: {
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderColor: lightColors.backgroundSecondary,
+    flexDirection: "row",
+    gap: 8,
+  },
   buttonRow: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -341,109 +331,11 @@ export const styles = StyleSheet.create({
   difficultyButton: {
     padding: 10,
     borderWidth: 1,
-    borderColor: "#ccc",
+    borderColor: lightColors.border,
     borderRadius: 8,
     marginRight: 10,
   },
   selectedDifficulty: {
-    backgroundColor: "#ddd",
+    backgroundColor: lightColors.backgroundTertiary,
   },
-  switchContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  categories: {
-    flexDirection: "row",
-    gap: 12,
-    paddingHorizontal: 12,
-    height: 48,
-    borderBottomWidth: 1,
-    borderColor: "#ddd",
-    marginVertical: 8,
-  },
-  categoryButton: {
-    backgroundColor: "#4e8cff",
-    borderRadius: 10,
-    padding: 10,
-    height: 40,
-  },
-  categoryButtonText: {
-    color: "#fff",
-    fontWeight: "600",
-  },
-  profileImage: {
-    width: 150,
-    height: 150,
-    borderRadius: 75,
-    marginBottom: 24,
-  },
-  signOutButton: {
-    marginTop: 24,
-    width: "100%",
-  },
-  saveButton: {
-    position: "absolute",
-    bottom: 20,
-    left: 20,
-    right: 20,
-    backgroundColor: "#4e8cff",
-    padding: 16,
-    borderRadius: 50,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-
-  sectionTitle: { fontSize: 20, marginTop: 20 },
-  list: { marginTop: 10 },
-  itemCard: {
-    flexDirection: "column",
-    backgroundColor: "#f0f0f0",
-    padding: 16,
-    marginRight: 12,
-    borderRadius: 12,
-    width: 120,
-    alignItems: "center",
-  },
-  itemName: { fontSize: 16, fontWeight: "bold" },
-  itemPrice: { fontSize: 14, color: "gray" },
-  modalBackground: {
-    flex: 1,
-    backgroundColor: "rgba(0,0,0,0.4)",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  modalCard: {
-    backgroundColor: "white",
-    padding: 20,
-    width: "80%",
-    borderRadius: 16,
-    alignItems: "center",
-  },
-  modalTitle: { fontSize: 22, fontWeight: "bold" },
-  modalButtons: {
-    flexDirection: "row",
-    marginTop: 20,
-    gap: 10,
-  },
-  buyButton: {
-    backgroundColor: "#4CAF50",
-    padding: 10,
-    borderRadius: 10,
-  },
-  cancelButton: {
-    backgroundColor: "#f44336",
-    padding: 10,
-    borderRadius: 10,
-  },
-
-
-
-
-  itemRow: {
-    paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderColor: "#ccc",
-    flexDirection: "row",
-    justifyContent: "space-between"
-},
 });

@@ -4,6 +4,7 @@ import { FirebaseError } from "firebase/app";
 import { firebase } from '@react-native-firebase/database';
 import { useUserStore } from "@/helpers/useUserStore";
 import { uid } from 'uid';
+import { styles } from "@/helpers/styles";
 
 export default function finishSignUp() {
     const { user, updateUser } = useUserStore();
@@ -59,57 +60,15 @@ export default function finishSignUp() {
     };
 
     return (
-        <View style={styles.container}>
-            <KeyboardAvoidingView style={styles.inner} behavior="padding">
-                <Text style={styles.titleTop}>And you're done!</Text>
-                <Text style={styles.title}>Thank you for using TaskaPet!</Text>
+        <View style={[styles.containerStretched, { paddingHorizontal: 12 }]}>
+            <KeyboardAvoidingView style={styles.containerInner} behavior="padding">
+                <Text style={[styles.title, { marginBottom: 6 }]}>And you're done!</Text>
+                <Text style={[styles.titleSecondary, { marginBottom: 24 }]}>Thank you for using TaskaPet!</Text>
 
-                <TouchableOpacity style={styles.button} onPress={handleSignUp}>
+                <TouchableOpacity style={[styles.button, { width: "100%" }]} onPress={handleSignUp}>
                     <Text style={styles.buttonText}>Sign Up</Text>
                 </TouchableOpacity>
             </KeyboardAvoidingView>
         </View>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        marginHorizontal: 20,
-        flex: 1,
-    },
-    inner: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: 24,
-        backgroundColor: '#fff',
-    },
-    titleTop: {
-        fontSize: 28,
-        marginBottom: 24,
-        fontWeight: '600',
-        color: '#333',
-    },
-    title: {
-        fontSize: 20,
-        marginBottom: 24,
-        fontWeight: '500',
-        color: '#333',
-        textAlign: 'center',
-    },
-    button: {
-        width: '100%',
-        height: 50,
-        backgroundColor: '#4e8cff',
-        borderRadius: 10,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginTop: 8,
-    },
-    buttonText: {
-        color: '#fff',
-        fontSize: 18,
-        fontWeight: '600',
-    },
-});
-

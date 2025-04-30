@@ -6,6 +6,7 @@ import { InventoryItem, Pet } from "@/helpers/types";
 import { useFocusEffect, useRouter } from "expo-router";
 import { styles } from "@/helpers/styles";
 import { chooseIcon } from "@/helpers/pets";
+import { chooseItemSprite } from "@/helpers/items";
 
 export default function PetPage() {
     const router = useRouter();
@@ -50,7 +51,7 @@ export default function PetPage() {
             fetchPet();
         }, []) // Empty dependency array = run only on screen focus
     );
-    
+
 
     const feedPet = async () => {
         await fetchFoodItems();
@@ -120,28 +121,28 @@ export default function PetPage() {
             </View>
 
             <TouchableOpacity onPress={() => setNamePetMenuVisible(true)}>
-                <Text style={styles.petName} >
+                <Text style={styles.title} >
                     {pet?.name === "" ? "Name your pet!" : pet?.name}
                 </Text>
             </TouchableOpacity>
 
-            <Text style={styles.statText}>
+            <Text style={[styles.text, { marginTop: 12 }]}>
                 Health: {pet?.health} / {pet?.maxHealth}
             </Text>
 
-            <Text style={styles.statText}>
+            <Text style={styles.text}>
                 Level: {pet?.level} | XP to next level: {100 - pet?.xp}
             </Text>
 
-            <Text style={styles.statText}>
+            <Text style={styles.text}>
                 Armor: {pet?.armor} | Damage: {pet?.damage} | Speed: {pet?.speed}
             </Text>
 
-            <Text style={styles.statusText}>
+            <Text style={[styles.text, { fontStyle: "italic" }]}>
                 {"Status: " + determineStatus(pet?.lastFedDate, pet?.lastPlayedDate)}
             </Text>
 
-            <TouchableOpacity style={styles.feedButton} onPress={() => feedPet()}>
+            <TouchableOpacity style={[styles.buyButton, { marginVertical: 8 }]} onPress={() => feedPet()}>
                 <Text style={styles.buttonText}>Feed the pet</Text>
             </TouchableOpacity>
 
@@ -164,7 +165,7 @@ export default function PetPage() {
                     <View style={styles.menu}>
                         <Text style={{ fontSize: 16, marginBottom: 8 }}>Enter your pets name!</Text>
                         <TextInput
-                            style={styles.textInput}
+                            style={styles.input}
                             value={petName}
                             onChangeText={setPetName}
                         />
@@ -173,7 +174,7 @@ export default function PetPage() {
                 </TouchableOpacity>
             </Modal>
 
-            <Modal visible={isFoodModalVisible} transparent animationType="slide">
+            <Modal visible={isFoodModalVisible} transparent>
                 <TouchableOpacity style={styles.modalOverlay} onPress={() => setIsFoodModalVisible(false)}>
                     <View style={[styles.menu, { maxHeight: 400 }]}>
                         <Text style={{ fontSize: 16, marginBottom: 10 }}>Choose a food item:</Text>
@@ -188,8 +189,8 @@ export default function PetPage() {
                                         style={styles.itemRow}
                                         onPress={() => useFoodItem(item)}
                                     >
+                                        <Image source={chooseItemSprite(item.id)} style={{ width: 16, height: 16, alignSelf: "center" }}></Image>
                                         <Text>{item.name} (+{item.health} HP)</Text>
-                                        <Text style={{ color: "#555" }}>x{item.quantity}</Text>
                                     </TouchableOpacity>
                                 )}
                             />

@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, FlatList, Image, StyleSheet, Dimensions }
 import { useRouter } from 'expo-router';
 import auth from '@react-native-firebase/auth';
 import { firebase } from '@react-native-firebase/database';
+import { styles } from '@/helpers/styles';
 
 const { width } = Dimensions.get('window');
 const ITEM_SIZE = width / 3 - 20;
@@ -42,14 +43,19 @@ export default function InventoryPage() {
 
     const renderItem = ({ item }: { item: InventoryItem }) => (
         <View style={styles.item}>
-            <Text style={styles.name}>{item.name}</Text>
-            <Text style={styles.name}>{item.type == "food" ? "Food" : "Vanity" }</Text>
+            <Text style={styles.text}>{item.name}</Text>
+            <Text style={styles.text}>{item.type == "food" ? "Food" : "Vanity"}</Text>
         </View>
     );
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.header}>Inventory</Text>
+        <View style={styles.containerStretched}>
+            <View style={styles.header}>
+                <Text style={styles.headerTitle}>Inventory</Text>
+                <TouchableOpacity style={styles.exitButton} onPress={() => router.back()}>
+                    <Text style={{ color: "red", fontSize: 16 }}>Exit</Text>
+                </TouchableOpacity>
+            </View>
 
             <FlatList
                 data={items}
@@ -59,60 +65,6 @@ export default function InventoryPage() {
                 contentContainerStyle={styles.grid}
             />
 
-            <TouchableOpacity style={styles.exitButton} onPress={() => router.back()}>
-                <Text style={styles.exitText}>Exit</Text>
-            </TouchableOpacity>
         </View>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        paddingTop: 60,
-        paddingHorizontal: 12,
-        backgroundColor: '#f4f4f4',
-    },
-    header: {
-        fontSize: 28,
-        fontWeight: 'bold',
-        marginBottom: 20,
-        textAlign: 'center',
-    },
-    grid: {
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    item: {
-        width: ITEM_SIZE,
-        height: ITEM_SIZE + 20,
-        margin: 10,
-        borderRadius: 10,
-        backgroundColor: '#fff',
-        justifyContent: 'center',
-        alignItems: 'center',
-        elevation: 2,
-    },
-    icon: {
-        width: ITEM_SIZE * 0.6,
-        height: ITEM_SIZE * 0.6,
-    },
-    name: {
-        marginTop: 6,
-        fontSize: 14,
-        textAlign: 'center',
-    },
-    exitButton: {
-        position: 'absolute',
-        bottom: 30,
-        alignSelf: 'center',
-        backgroundColor: '#333',
-        paddingHorizontal: 20,
-        paddingVertical: 10,
-        borderRadius: 10,
-    },
-    exitText: {
-        color: '#fff',
-        fontSize: 16,
-    },
-});
