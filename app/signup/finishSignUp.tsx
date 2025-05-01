@@ -4,10 +4,14 @@ import { FirebaseError } from "firebase/app";
 import { firebase } from '@react-native-firebase/database';
 import { useUserStore } from "@/helpers/useUserStore";
 import { uid } from 'uid';
-import { styles } from "@/helpers/styles";
+import { useTheme } from "@/helpers/themeContext";
+import { createStyles } from "@/helpers/styles";
 
 export default function finishSignUp() {
     const { user, updateUser } = useUserStore();
+
+    const { theme } = useTheme();
+    const styles = createStyles(theme);
 
     const database = firebase
         .app()

@@ -1,12 +1,13 @@
-import { Button, Image, Modal, StyleSheet, Text, TextInput, TouchableOpacity, View, FlatList } from "react-native";
+import { Button, Image, Modal, StyleSheet, Text, TextInput, TouchableOpacity, View, FlatList, ToastAndroid } from "react-native";
 import auth from "@react-native-firebase/auth";
 import { firebase } from '@react-native-firebase/database';
 import { useCallback, useEffect, useState } from "react";
 import { InventoryItem, Pet } from "@/helpers/types";
 import { useFocusEffect, useRouter } from "expo-router";
-import { styles } from "@/helpers/styles";
 import { chooseIcon } from "@/helpers/pets";
 import { chooseItemSprite } from "@/helpers/items";
+import { useTheme } from "@/helpers/themeContext";
+import { createStyles } from "@/helpers/styles";
 
 export default function PetPage() {
     const router = useRouter();
@@ -16,6 +17,9 @@ export default function PetPage() {
 
     const [foodItems, setFoodItems] = useState<any[]>([]);
     const [isFoodModalVisible, setIsFoodModalVisible] = useState(false);
+
+    const { theme } = useTheme();
+    const styles = createStyles(theme);
 
     const database = firebase
         .app()
@@ -78,6 +82,8 @@ export default function PetPage() {
 
         setIsFoodModalVisible(false);
         fetchPet();
+
+        ToastAndroid.show(`Pet fed!`, ToastAndroid.SHORT); // won't work on ios
     };
 
 
@@ -177,7 +183,7 @@ export default function PetPage() {
             <Modal visible={isFoodModalVisible} transparent>
                 <TouchableOpacity style={styles.modalOverlay} onPress={() => setIsFoodModalVisible(false)}>
                     <View style={[styles.menu, { maxHeight: 400 }]}>
-                        <Text style={{ fontSize: 16, marginBottom: 10 }}>Choose a food item:</Text>
+                        <Text style={styles.feedMenuTitle}>Choose a food item:</Text>
                         {foodItems.length === 0 ? (
                             <Text>No food items available!</Text>
                         ) : (
@@ -190,7 +196,7 @@ export default function PetPage() {
                                         onPress={() => useFoodItem(item)}
                                     >
                                         <Image source={chooseItemSprite(item.id)} style={{ width: 16, height: 16, alignSelf: "center" }}></Image>
-                                        <Text>{item.name} (+{item.health} HP)</Text>
+                                        <Text style={[styles.feedMenuTitle, { fontSize: 14, marginBottom: 0 }]}>{item.name} (+{item.health} HP)</Text>
                                     </TouchableOpacity>
                                 )}
                             />

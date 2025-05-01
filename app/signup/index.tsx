@@ -5,7 +5,8 @@ import auth from "@react-native-firebase/auth";
 import { useUserStore } from "@/helpers/useUserStore";
 import { User } from "@/helpers/types";
 import { firebase } from '@react-native-firebase/database';
-import { styles } from "@/helpers/styles";
+import { useTheme } from "@/helpers/themeContext";
+import { createStyles } from "@/helpers/styles";
 
 export default function SignUp() {
     const { setUser } = useUserStore();
@@ -13,6 +14,9 @@ export default function SignUp() {
     const [email, setEmail] = useState<string>("");
     const [password1, setPassword1] = useState<string>("");
     const [password2, setPassword2] = useState<string>("");
+
+    const { theme } = useTheme();
+    const styles = createStyles(theme);
 
     const router = useRouter();
 

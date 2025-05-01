@@ -1,14 +1,18 @@
-import { useRouter } from "expo-router";
-import { FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useFocusEffect, useRouter } from "expo-router";
+import { FlatList, StyleSheet, Text, ToastAndroid, TouchableOpacity, View } from "react-native";
 import auth from "@react-native-firebase/auth";
 import { firebase } from '@react-native-firebase/database';
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Task } from "@/helpers/types";
-import { styles } from "@/helpers/styles";
+import { useTheme } from "@/helpers/themeContext";
+import { createStyles } from "@/helpers/styles";
 
 export default function HistoryPage() {
     const router = useRouter();
     const [tasks, setTasks] = useState<Task[]>([]);
+
+    const { theme } = useTheme();
+    const styles = createStyles(theme);
 
     const database = firebase
         .app()
@@ -35,16 +39,32 @@ export default function HistoryPage() {
                 difficulty: task.difficulty,
                 isCompleted: task.isCompleted || false,
                 isRepeated: task.isRepeated || false,
-                repeatInterval: task.repeatInterval || -1
+                repeatInterval: task.repeatInterval || -1,
+                completionDate: task.completionDate,
             }));
 
-            setTasks(fetchedTasks);
+            const sortedTasks = fetchedTasks
+                .filter(task => task.isCompleted)
+                .sort((a, b) => (new Date(b.completionDate).getTime() - new Date(a.completionDate).getTime()));
+
+            setTasks(sortedTasks);
         })
     };
 
-    useEffect(() => {
-        fetchTasks();
-    }, []);
+    useFocusEffect(
+        useCallback(() => {
+            fetchTasks();
+        }, [])
+    );
+
+    const handleTaskRemoval = async (task: Task) => {
+        const userId = auth().currentUser?.uid;
+        const reference = await database.ref(`/users/${userId}/tasks/${task.id}`);
+
+        reference.remove();
+
+        ToastAndroid.show(`Task removed from history.`, ToastAndroid.SHORT); // won't work on ios
+    };
 
     const renderTask = ({ item }: { item: Task }) => {
         if (!item.isCompleted) return null;
@@ -54,22 +74,29 @@ export default function HistoryPage() {
                 <Text style={styles.taskTitle}>{item.title} - {item.difficulty}</Text>
                 {item.description !== "" && (<Text style={styles.taskDesc}>{item.description}</Text>)}
                 <Text style={styles.taskDeadline}>Deadline: {item.deadline}</Text>
+                <Text style={styles.taskDeadline}>Completion date: {item.completionDate}</Text>
                 <Text style={styles.taskTags}>Tags: {item.tags.join(', ')}</Text>
+                <TouchableOpacity onPress={() => handleTaskRemoval(item)} style={styles.exitButton}>
+                    <Text style={{ color: "red", fontSize: 16 }}>Remove</Text>
+                </TouchableOpacity>
             </View>
         );
     };
 
     return (
-        <View style={[styles.container, { padding: 20 }]}>
-            <TouchableOpacity onPress={() => router.back()} style={styles.exitButton}>
-                <Text style={{ color: "red", fontSize: 16 }}>Exit</Text>
-            </TouchableOpacity>
+        <View style={[styles.containerStretched]}>
+            <View style={styles.header}>
+                <Text style={styles.headerTitle}>History</Text>
+                <TouchableOpacity onPress={() => router.back()} style={styles.exitButton}>
+                    <Text style={{ color: "red", fontSize: 16 }}>Exit</Text>
+                </TouchableOpacity>
+            </View>
 
             <FlatList
                 data={tasks}
                 renderItem={renderTask}
                 keyExtractor={item => item.id}
-                ListEmptyComponent={<Text style={{ textAlign: 'center' }}>No tasks completed...</Text>}
+                ListEmptyComponent={<Text style={[styles.text, { alignSelf: "center", marginTop: 12 }]}>No tasks completed...</Text>}
             />
         </View>
     );

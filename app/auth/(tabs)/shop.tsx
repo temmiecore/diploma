@@ -3,14 +3,18 @@ import { useEffect, useState } from "react";
 import auth from "@react-native-firebase/auth";
 import { firebase } from '@react-native-firebase/database';
 import { Alert, FlatList, Image, Modal, Text, ToastAndroid, TouchableOpacity, View } from "react-native";
-import { styles } from "@/helpers/styles";
 import { useFocusEffect, useRouter } from "expo-router";
 import { chooseItemSprite, foodItems, vanityItems } from "@/helpers/items";
+import { useTheme } from "@/helpers/themeContext";
+import { createStyles } from "@/helpers/styles";
 
 export default function ShopPage() {
     const [coins, setCoins] = useState<number>(0);
     const [selectedItem, setSelectedItem] = useState<ShopItem | null>(null);
     const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+
+    const { theme } = useTheme();
+    const styles = createStyles(theme);
 
     const database = firebase
         .app()
@@ -72,7 +76,7 @@ export default function ShopPage() {
 
         setCoins(prev => prev - item.price);
         setIsModalVisible(false);
-        ToastAndroid.show(`${item.name} added to your inventory.`, ToastAndroid.SHORT); // won't work on android
+        ToastAndroid.show(`${item.name} added to your inventory.`, ToastAndroid.SHORT); // won't work on ios
     };
 
     return (
@@ -106,9 +110,9 @@ export default function ShopPage() {
                 <View style={styles.modalOverlay}>
                     <View style={[styles.menu, { alignItems: "center" }]}>
                         <Text style={styles.title}>{selectedItem?.name}</Text>
-                        <Text style={{ marginBottom: 10 }}>Price: {selectedItem?.price}🪙</Text>
+                        <Text style={[styles.text, { marginBottom: 0 }]}>Price: {selectedItem?.price}🪙</Text>
                         {selectedItem?.type === 'food' && (
-                            <Text>Health Gain: {selectedItem.health}</Text>
+                            <Text style={[styles.text, { marginBottom: 0 }]}>Health Gain: {selectedItem.health}</Text>
                         )}
                         <View style={styles.modalButtons}>
                             <TouchableOpacity style={styles.buyButton} onPress={() => handleBuy(selectedItem)}>

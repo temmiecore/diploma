@@ -3,12 +3,16 @@ import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, Vi
 import { Picker } from '@react-native-picker/picker';
 import { useRouter } from "expo-router";
 import { useUserStore } from "@/helpers/useUserStore";
-import { styles } from "@/helpers/styles";
+import { useTheme } from "@/helpers/themeContext";
+import { createStyles } from "@/helpers/styles";
 
 export default function PersonalInformation() {
     const [name, setName] = useState<string>('');
     const [age, setAge] = useState<string>('');
     const [gender, setGender] = useState<string>('');
+
+    const { theme } = useTheme();
+    const styles = createStyles(theme);
 
     const { user, updateUser } = useUserStore();
 

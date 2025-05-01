@@ -1,10 +1,11 @@
-import { Button, FlatList, Image, Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Button, FlatList, Image, Modal, StyleSheet, Text, TextInput, ToastAndroid, TouchableOpacity, View } from "react-native";
 import auth from "@react-native-firebase/auth";
 import { useEffect, useState } from "react";
 import { Task } from "@/helpers/types";
 import { firebase } from '@react-native-firebase/database';
 import { useRouter, useSegments } from "expo-router";
-import { styles } from "@/helpers/styles";
+import { useTheme } from "@/helpers/themeContext";
+import { createStyles } from "@/helpers/styles";
 
 export default function TasksPage() {
     const [originalTaskList, setOriginalTaskList] = useState<Task[]>([]);
@@ -14,6 +15,9 @@ export default function TasksPage() {
     const [tagFilterMenuVisible, setTagFilterMenuVisible] = useState(false);
     const [tagFilter, setTagFilter] = useState('');
     const [listId, setListId] = useState<number>(0);
+
+    const { theme } = useTheme();
+    const styles = createStyles(theme);
 
     const segments = useSegments();
 
@@ -44,7 +48,8 @@ export default function TasksPage() {
                 difficulty: task.difficulty,
                 isCompleted: task.isCompleted || false,
                 isRepeated: task.isRepeated || false,
-                repeatInterval: task.repeatInterval || -1
+                repeatInterval: task.repeatInterval || -1,
+                completionDate: task.completionDate,
             }));
 
             setTasks(fetchedTasks);
@@ -88,16 +93,18 @@ export default function TasksPage() {
 
             await taskRef.update({ deadline: newDeadline.toISOString() });
         } else {
-            await taskRef.update({ isCompleted: true });
+            await taskRef.update({ isCompleted: true, completionDate: new Date().toISOString() });
         }
 
         // Coins
-        const coinsSnapshot = await database.ref(`/users/${userId}/coins`).once("value");
+        const coinsSnapshot = await database.ref(`/users/${userId}/coinAmount`).once("value");
         const currentCoins = coinsSnapshot.val() || 0;
 
-        await database.ref(`/users/${userId}/coins`).set(currentCoins + coinReward);
+        await database.ref(`/users/${userId}/coinAmount`).set(currentCoins + coinReward);
 
         fetchTasks();
+
+        ToastAndroid.show(`Task complete!`, ToastAndroid.SHORT); // won't work on ios
     };
 
 
@@ -216,7 +223,7 @@ export default function TasksPage() {
                 data={tasks}
                 renderItem={renderTask}
                 keyExtractor={item => item.id}
-                ListEmptyComponent={<Text style={{ textAlign: 'center', marginTop: 16 }}>No tasks!</Text>}
+                ListEmptyComponent={<Text style={[styles.text, { alignSelf: "center", marginTop: 12 }]}>No tasks!</Text>}
             />
 
             <TouchableOpacity

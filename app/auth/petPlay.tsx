@@ -1,6 +1,6 @@
 import { useRouter } from "expo-router";
 import { useEffect, useRef, useState } from "react";
-import { Button, Dimensions, StyleSheet, Text, View } from "react-native";
+import { Button, Dimensions, ImageBackground, StyleSheet, Text, View } from "react-native";
 import { Gesture, GestureDetector, GestureHandlerRootView, TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import Animated, { useAnimatedStyle, useSharedValue, withSpring, withTiming } from 'react-native-reanimated';
 import auth from "@react-native-firebase/auth";
@@ -75,7 +75,6 @@ export default function PetPlayPage() {
         ],
     }));
 
-    // doesn't work properly
     useEffect(() => {
         const wanderInterval = setInterval(() => {
             posX.value = withSpring(Math.random() * (width - 240) - 80);
@@ -100,31 +99,33 @@ export default function PetPlayPage() {
     return (
         <GestureHandlerRootView>
             <GestureDetector gesture={tap}>
-                <View style={styles.container}>
-                    <Text style={styles.header}>Play with your pet!</Text>
+                <View style={{ flex: 1 }}>
+                    <ImageBackground source={require("@/assets/images/background.png")} style={styles.container} resizeMode="cover">
+                        <Text style={styles.header}>Play with your pet!</Text>
 
-                    <View style={styles.progressBarContainer}>
-                        <View style={[styles.progressBarFill, { width: `${excitement}%` }]} />
-                    </View>
-
-                    <Text style={styles.exText}>Excitement: {excitement}%</Text>
-
-                    <TouchableWithoutFeedback onPress={petSpin}>
-                        <Animated.Image
-                            source={chooseIcon(petType)}
-                            style={[styles.pet, animatedStyle]}
-                        />
-                    </TouchableWithoutFeedback>
-
-                    {canFinish && (
-                        <View style={styles.doneContainer}>
-                            <Text style={styles.doneText}>Your pet is thrilled!</Text>
-                            <Button title="Done playing" onPress={handleDonePlaying} />
+                        <View style={styles.progressBarContainer}>
+                            <View style={[styles.progressBarFill, { width: `${excitement}%` }]} />
                         </View>
-                    )}
+
+                        <Text style={styles.exText}>Excitement: {excitement}%</Text>
+
+                        <TouchableWithoutFeedback onPress={petSpin}>
+                            <Animated.Image
+                                source={chooseIcon(petType)}
+                                style={[styles.pet, animatedStyle]}
+                            />
+                        </TouchableWithoutFeedback>
+
+                        {canFinish && (
+                            <View style={styles.doneContainer}>
+                                <Text style={styles.doneText}>Your pet is thrilled!</Text>
+                                <Button title="Done playing" onPress={handleDonePlaying} />
+                            </View>
+                        )}
+                    </ImageBackground>
                 </View>
             </GestureDetector>
-        </GestureHandlerRootView>
+        </GestureHandlerRootView >
     );
 }
 
@@ -142,11 +143,18 @@ const styles = StyleSheet.create({
     },
     progressBarContainer: {
         width: "80%",
-        height: 12,
+        height: 16,
         backgroundColor: "black",
         borderRadius: 10,
         overflow: "hidden",
         marginTop: 20,
+        borderWidth: 2,
+        borderColor: "white",
+    },
+    progressBarFill: {
+        height: "100%",
+        backgroundColor: "#4CAF50",
+        borderRadius: 10,
     },
     exText: {
         marginTop: 8,
@@ -166,10 +174,5 @@ const styles = StyleSheet.create({
     doneText: {
         fontSize: 18,
         marginBottom: 10,
-    },
-    progressBarFill: {
-        height: 12,
-        backgroundColor: "#4CAF50",
-        borderRadius: 10,
     },
 });

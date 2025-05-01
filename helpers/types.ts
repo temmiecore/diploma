@@ -24,6 +24,7 @@ export interface Task {
   isCompleted: boolean;
   isRepeated: boolean;
   repeatInterval: number; // number of days?
+  completionDate: string;
 }
 
 export interface ShopItem {
@@ -38,6 +39,7 @@ export interface InventoryItem {
     id: string;
     name: string;
     type: "food" | "vanity";
+    amount: number;
 }
 
 export interface User {

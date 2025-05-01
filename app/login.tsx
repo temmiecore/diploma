@@ -2,9 +2,13 @@ import { useState } from "react";
 import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import auth from "@react-native-firebase/auth";
 import { FirebaseError } from "firebase/app"
-import { styles } from "@/helpers/styles";
+import { useTheme } from "@/helpers/themeContext";
+import { createStyles } from "@/helpers/styles";
 
 export default function Login() {
+    const { theme } = useTheme();
+    const styles = createStyles(theme);
+
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 

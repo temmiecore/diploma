@@ -1,15 +1,21 @@
+import { createStyles } from '@/helpers/styles';
+import { useTheme } from '@/helpers/themeContext';
 import { Stack, Tabs } from 'expo-router';
 import { Button, Image, StyleSheet } from 'react-native';
 
 export default function TabLayout() {
+    const { theme } = useTheme();
+    const styles = createStyles(theme);
+
     return (
         <Tabs screenOptions={{
             tabBarShowLabel: false,
-            tabBarStyle: {
+            tabBarStyle: [styles.footer,{
                 height: 64,
                 paddingBottom: 24,
                 paddingTop: 12,
-            }
+
+            }]
         }}>
             <Tabs.Screen
                 name="pet"
@@ -17,12 +23,12 @@ export default function TabLayout() {
                     title: "Pet", tabBarIcon: ({ focused }) => (
                         <Image
                             source={require('../../../assets/images/pet.png')}
-                            style={styles.image}
+                            style={styles.footerImage}
                         />
                     ),
                     headerShown: false
                 }}
-                
+
             />
             <Tabs.Screen
                 name="shop"
@@ -30,7 +36,7 @@ export default function TabLayout() {
                     title: "Shop", tabBarIcon: ({ focused }) => (
                         <Image
                             source={require('../../../assets/images/shop.png')}
-                            style={styles.image}
+                            style={styles.footerImage}
                         />
                     ),
                     headerShown: false
@@ -42,7 +48,7 @@ export default function TabLayout() {
                     title: "Today's Tasks", tabBarIcon: ({ focused }) => (
                         <Image
                             source={require('../../../assets/images/home.png')}
-                            style={styles.image}
+                            style={styles.footerImage}
                         />
                     ),
                     headerShown: false
@@ -54,7 +60,7 @@ export default function TabLayout() {
                     title: "All Tasks", tabBarIcon: ({ focused }) => (
                         <Image
                             source={require('../../../assets/images/tasks.png')}
-                            style={styles.image}
+                            style={styles.footerImage}
                         />
                     ),
                     headerShown: false
@@ -66,7 +72,7 @@ export default function TabLayout() {
                     title: "Profile", tabBarIcon: ({ focused }) => (
                         <Image
                             source={require('../../../assets/images/profile.png')}
-                            style={styles.image}
+                            style={styles.footerImage}
                         />
                     ),
                     headerShown: false
@@ -75,10 +81,3 @@ export default function TabLayout() {
         </Tabs>
     );
 }
-
-const styles = StyleSheet.create({
-    image: {
-        width: 36,
-        height: 36,
-    }
-})

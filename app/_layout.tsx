@@ -2,6 +2,7 @@ import { Stack, useRouter, useSegments } from "expo-router";
 import { useEffect, useState } from "react";
 import auth, { FirebaseAuthTypes } from "@react-native-firebase/auth";
 import { ActivityIndicator, BackHandler, View } from "react-native";
+import { ThemeProvider } from "@/helpers/themeContext";
 
 export default function RootLayout() {
     // Set an initializing state whilst Firebase connects
@@ -26,9 +27,9 @@ export default function RootLayout() {
 
     useEffect(() => {
         if (initializing) return;
-    
+
         const inAuthGroup = segments[0] === "auth";
-    
+
         if (user) {
             if (!inAuthGroup) {
                 router.replace('/auth/(tabs)/home');
@@ -38,9 +39,9 @@ export default function RootLayout() {
                 router.replace('/');
             }
         }
-    
+
     }, [user, initializing, segments]);
-    
+
 
     useEffect(() => {
         const backAction = () => {
@@ -77,11 +78,13 @@ export default function RootLayout() {
         );
 
     return (
-        <Stack>
-            <Stack.Screen name="index" options={{ headerShown: false }}/>
-            <Stack.Screen name="login" options={{ headerShown: false }}/>
-            <Stack.Screen name="signup" options={{ headerShown: false }}/>
-            <Stack.Screen name="auth" options={{ headerShown: false }} />
-        </Stack>
+        <ThemeProvider>
+            <Stack>
+                <Stack.Screen name="index" options={{ headerShown: false }} />
+                <Stack.Screen name="login" options={{ headerShown: false }} />
+                <Stack.Screen name="signup" options={{ headerShown: false }} />
+                <Stack.Screen name="auth" options={{ headerShown: false }} />
+            </Stack>
+        </ThemeProvider>
     );
 }

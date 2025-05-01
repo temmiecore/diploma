@@ -1,5 +1,6 @@
 import { chooseIcon, pets } from "@/helpers/pets";
-import { styles } from "@/helpers/styles";
+import { createStyles } from "@/helpers/styles";
+import { useTheme } from "@/helpers/themeContext";
 import { Pet } from "@/helpers/types";
 import { useUserStore } from "@/helpers/useUserStore";
 import { useRouter } from "expo-router";
@@ -11,6 +12,9 @@ export default function choosePet() {
     const [selectedPet, setSelectedPet] = useState<Pet | null>(null);
 
     const { user, updateUser } = useUserStore();
+
+    const { theme } = useTheme();
+    const styles = createStyles(theme);
 
     const router = useRouter();
 

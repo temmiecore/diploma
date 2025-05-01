@@ -4,8 +4,11 @@ import auth from "@react-native-firebase/auth";
 import { firebase } from '@react-native-firebase/database';
 import { Pet } from '@/helpers/types';
 import { useRouter } from 'expo-router';
-import Animated, { useAnimatedStyle, useSharedValue, withSpring, withTiming, runOnJS } from 'react-native-reanimated';
+import Animated, { useAnimatedStyle, useSharedValue, withSpring, withTiming, runOnJS, withRepeat, interpolateColor } from 'react-native-reanimated';
 import { chooseIcon } from '@/helpers/pets';
+import { monsterNames, monsterSprites } from '@/helpers/monsters';
+import { useTheme } from '@/helpers/themeContext';
+import { createStyles } from '@/helpers/styles';
 
 export default function PetBattlePage() {
     const [monster, setMonster] = useState<Monster | null>(null);
@@ -16,6 +19,9 @@ export default function PetBattlePage() {
     const [battleEnded, setBattleEnded] = useState<boolean>(false);
     const battleIntervalRef = useRef<NodeJS.Timeout | null>(null);
     const xp = useRef(0);
+
+    const { theme } = useTheme();
+    const styles = createStyles(theme);
 
     const router = useRouter();
 
@@ -45,6 +51,26 @@ export default function PetBattlePage() {
         }
     };
 
+    // BG COLOR CHANGE
+    const colorProgress = useSharedValue(0);
+
+    useEffect(() => {
+        colorProgress.value = withRepeat(
+            withTiming(3, { duration: 8000 }),
+            -1,
+            false
+        );
+    }, []);
+
+    const animatedColors = useAnimatedStyle(() => {
+        const color1 = interpolateColor(colorProgress.value, [0, 1, 2, 3], ['#F7CFD8', '#F4F8D3', '#A6D6D6', '#F7CFD8']);
+
+        return {
+            backgroundColor: color1,
+        };
+    });
+
+
     /// START
     useEffect(() => {
         fetchPetAndSetMonster();
@@ -63,6 +89,7 @@ export default function PetBattlePage() {
         setMonster(newMonster);
         setMonsterHealth(newMonster.health);
     };
+
 
     /// TURN
     const handleTurn = () => {
@@ -104,6 +131,7 @@ export default function PetBattlePage() {
             battleIntervalRef.current = null;
         }
     };
+
 
     // BATTLE END
     useEffect(() => {
@@ -173,19 +201,27 @@ export default function PetBattlePage() {
     };
 
     return (
-        <View style={{ flex: 1, backgroundColor: '#d0e7f9', padding: 32 }}>
+        <Animated.View style={[{ flex: 1, padding: 32 }, animatedColors]}>
             <View style={{ alignItems: 'flex-end', marginTop: 40 }}>
                 <View style={{ backgroundColor: '#fff', padding: 8, borderRadius: 8, marginBottom: 4 }}>
                     <Text style={{ fontWeight: 'bold', fontSize: 20 }}>{monster?.name || "Monster"}</Text>
                     <Text>HP: {monsterHealth} / {monster?.health}</Text>
                 </View>
-                <Image source={monster?.sprite} style={{ width: 160, height: 160 }} />
+
+                <View style={{ alignItems: 'center' }}>
+                    <View style={styles.ovalShadow} />
+                    <Image source={monster?.sprite} style={{ width: 160, height: 160 }} />
+                </View>
             </View>
 
             <View style={{ flex: 1 }} />
 
             <View style={{ flexDirection: 'row', alignItems: 'flex-end', marginBottom: 128 }}>
-                <Image source={chooseIcon(pet?.type)} style={{ width: 160, height: 160 }} />
+                <View style={{ alignItems: 'center' }}>
+                    <View style={styles.ovalShadow} />
+                    <Image source={chooseIcon(pet?.type)} style={{ width: 160, height: 160 }} />
+                </View>
+
                 <View style={{ marginLeft: 12, backgroundColor: '#fff', padding: 8, borderRadius: 8 }}>
                     <Text style={{ fontWeight: 'bold', fontSize: 20 }}>{pet?.name || "Your Pet"}</Text>
                     <Text>HP: {petHealth} / {pet?.maxHealth}</Text>
@@ -193,13 +229,15 @@ export default function PetBattlePage() {
             </View>
 
             <AttackPointManager onCircleHit={onCircleHit} battleEnded={battleEnded} />
-        </View>
+        </Animated.View>
+
     );
 }
 
 
 /// MONSTER
 type Monster = {
+    name: string;
     health: number;
     damage: number;
     armor: number;
@@ -212,28 +250,15 @@ function generateRandomMonster(petLevel: number): Monster {
     const baseDamage = 3 + petLevel * 2;
     const baseArmor = petLevel;
     const attackSpeed = Math.random() * 2 + 1; // between 1s and 3s
-    const monsterSprites = [
-        require("@/assets/images/monsters/forlorn_goo.png"),
-        require("@/assets/images/monsters/furious_goo.png"),
-        require("@/assets/images/monsters/giant_wasp.png"),
-        require("@/assets/images/monsters/gnome.png"),
-        require("@/assets/images/monsters/gooseberus.png"),
-        require("@/assets/images/monsters/ice_golem.png"),
-        require("@/assets/images/monsters/insectoid.png"),
-        require("@/assets/images/monsters/insectoid_flying.png"),
-        require("@/assets/images/monsters/living_onion.png"),
-        require("@/assets/images/monsters/living_pea.png"),
-        require("@/assets/images/monsters/mushy_spider.png"),
-        require("@/assets/images/monsters/rabid_hare.png"),
-    ];
-    const sprite = monsterSprites[Math.floor(Math.random() * monsterSprites.length)];
+    const index = Math.floor(Math.random() * monsterNames.length);
 
     return {
+        name: monsterNames[index],
+        sprite: monsterSprites[index],
         health: Math.floor(baseHealth + Math.random() * 10),
         damage: Math.floor(baseDamage + Math.random() * 2),
         armor: Math.floor(baseArmor + Math.random() * 2),
         speed: attackSpeed,
-        sprite,
     };
 }
 

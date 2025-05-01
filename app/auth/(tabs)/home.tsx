@@ -1,10 +1,11 @@
-import { Button, FlatList, Image, Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Button, FlatList, Image, Modal, StyleSheet, Text, TextInput, ToastAndroid, TouchableOpacity, View } from "react-native";
 import auth from "@react-native-firebase/auth";
 import { useEffect, useState } from "react";
 import { Task } from "@/helpers/types";
 import { firebase } from '@react-native-firebase/database';
 import { useRouter, useSegments } from "expo-router";
-import { styles } from "@/helpers/styles";
+import { useTheme } from "@/helpers/themeContext";
+import { createStyles } from "@/helpers/styles";
 
 export default function MainPage() {
     const [originalTaskList, setOriginalTaskList] = useState<Task[]>([]);
@@ -13,6 +14,9 @@ export default function MainPage() {
     const [filterMenuVisible, setFilterMenuVisible] = useState(false);
     const [tagFilterMenuVisible, setTagFilterMenuVisible] = useState(false);
     const [tagFilter, setTagFilter] = useState('');
+
+    const { theme } = useTheme();
+    const styles = createStyles(theme);
 
     const segments = useSegments();
 
@@ -50,7 +54,8 @@ export default function MainPage() {
                 difficulty: task.difficulty,
                 isCompleted: task.isCompleted || false,
                 isRepeated: task.isRepeated || false,
-                repeatInterval: task.repeatInterval || -1
+                repeatInterval: task.repeatInterval || -1,
+                completionDate: task.completionDate,
             }))
                 .filter((task: Task) => {
                     const deadline = new Date(task.deadline);
@@ -98,7 +103,7 @@ export default function MainPage() {
 
             await taskRef.update({ deadline: newDeadline.toISOString() });
         } else {
-            await taskRef.update({ isCompleted: true });
+            await taskRef.update({ isCompleted: true, completionDate: new Date().toISOString() });
         }
 
         // Coins
@@ -108,6 +113,8 @@ export default function MainPage() {
         await database.ref(`/users/${userId}/coinAmount`).set(currentCoins + coinReward);
 
         fetchTasks();
+
+        ToastAndroid.show(`Task complete!`, ToastAndroid.SHORT); // won't work on ios
     };
 
     const handleTaskOpenAddWindow = () => {
@@ -183,7 +190,7 @@ export default function MainPage() {
                 data={tasks}
                 renderItem={renderTask}
                 keyExtractor={item => item.id}
-                ListEmptyComponent={<Text style={{ textAlign: 'center', marginTop: 16 }}>No tasks for today!</Text>}
+                ListEmptyComponent={<Text style={[styles.text, { alignSelf: "center", marginTop: 12 }]}>No tasks for today!</Text>}
             />
             <TouchableOpacity
                 style={styles.addButton}

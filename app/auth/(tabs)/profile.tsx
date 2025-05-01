@@ -1,12 +1,16 @@
-import { Button, Image, ScrollView, StyleSheet, Switch, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Button, Image, ScrollView, StyleSheet, Switch, Text, TextInput, ToastAndroid, TouchableOpacity, View } from "react-native";
 import auth from "@react-native-firebase/auth";
 import { useEffect, useState } from "react";
 import { firebase } from '@react-native-firebase/database';
 import { Picker } from "@react-native-picker/picker";
 import { User } from "@/helpers/types";
-import { styles } from "@/helpers/styles";
+import { useTheme } from "@/helpers/themeContext";
+import { createStyles } from "@/helpers/styles";
 
 export default function ProfilePage() {
+    const { darkMode, setDarkMode, theme } = useTheme();
+    const styles = createStyles(theme);
+
     const [user, setUser] = useState<User>();
 
     const [name, setName] = useState("");
@@ -16,7 +20,6 @@ export default function ProfilePage() {
     const [currentPassword, setCurrentPassword] = useState("");
     const [newPassword1, setNewPassword1] = useState("");
     const [newPassword2, setNewPassword2] = useState("");
-    const [darkMode, setDarkMode] = useState(false);
     const [profileImage, setProfileImage] = useState("");
 
     const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
@@ -101,6 +104,8 @@ export default function ProfilePage() {
         }
 
         reference.set(editedUser);
+
+        ToastAndroid.show(`User changes saved!`, ToastAndroid.SHORT); // won't work on ios
     };
 
     return (

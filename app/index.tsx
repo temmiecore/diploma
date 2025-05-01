@@ -1,9 +1,13 @@
-import { styles } from "@/helpers/styles";
+import { createStyles } from "@/helpers/styles";
+import { useTheme } from "@/helpers/themeContext";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { Text, View, StyleSheet, KeyboardAvoidingView, TextInput, TouchableOpacity } from "react-native";
 
 export default function Index() {
+    const { theme } = useTheme();
+    const styles = createStyles(theme);
+
     const router = useRouter();
 
     const signIn = () => {

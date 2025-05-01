@@ -14,7 +14,8 @@ import {
 import DatePicker from "react-native-date-picker";
 import { firebase } from "@react-native-firebase/database";
 import { uid } from "uid";
-import { styles } from "@/helpers/styles";
+import { useTheme } from "@/helpers/themeContext";
+import { createStyles } from "@/helpers/styles";
 
 export default function AddTaskPage() {
     const [title, setTitle] = useState("");
@@ -27,6 +28,9 @@ export default function AddTaskPage() {
     );
     const [isRepeated, setIsRepeated] = useState<boolean>(false);
     const [repeatInterval, setRepeatInterval] = useState<string>("");
+
+    const { theme } = useTheme();
+    const styles = createStyles(theme);
 
     const router = useRouter();
 
@@ -52,6 +56,7 @@ export default function AddTaskPage() {
                 isCompleted: false,
                 isRepeated: isRepeated,
                 repeatInterval: repeatInterval,
+                completionDate: "",
             });
 
             alert("Task added!");
@@ -85,7 +90,7 @@ export default function AddTaskPage() {
                     onPress={() => setShowDatePicker(true)}
                     style={[styles.input, { justifyContent: "center" }]}
                 >
-                    <Text>{deadline.toDateString()}</Text>
+                    <Text style={[styles.text, { fontSize: 16, marginBottom: 0 }]}>{deadline.toDateString()}</Text>
                 </TouchableOpacity>
                 {showDatePicker && (
                     <DatePicker
@@ -116,12 +121,12 @@ export default function AddTaskPage() {
                             ]}
                             onPress={() => setDifficulty(level as "Easy" | "Medium" | "Hard")}
                         >
-                            <Text>{level}</Text>
+                            <Text style={[styles.text, { fontSize: 16, marginBottom: 0 }]}>{level}</Text>
                         </TouchableOpacity>
                     ))}
                 </View>
 
-                <View style={{display: "flex", flexDirection: "row", justifyContent: "space-between"}}>
+                <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
                     <Text style={styles.label}>Is it repeatable?</Text>
                     <Switch value={isRepeated} onValueChange={setIsRepeated} />
                 </View>
