@@ -9,7 +9,8 @@ import {
     TextInput,
     TouchableOpacity,
     View,
-    ScrollView
+    ScrollView,
+    ToastAndroid
 } from "react-native";
 import DatePicker from "react-native-date-picker";
 import { firebase } from "@react-native-firebase/database";
@@ -44,7 +45,7 @@ export default function AddTaskPage() {
         const userId = auth().currentUser?.uid;
 
         const taskId: string = uid();
-
+        
         try {
             await database.ref(`/users/${userId}/tasks/${taskId}`).set({
                 id: taskId,
@@ -59,7 +60,7 @@ export default function AddTaskPage() {
                 completionDate: "",
             });
 
-            alert("Task added!");
+            ToastAndroid.show("Task added successfully!", ToastAndroid.SHORT);
             router.back();
         } catch (e: any) {
             console.log(e);

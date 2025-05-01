@@ -6,6 +6,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Task } from "@/helpers/types";
 import { useTheme } from "@/helpers/themeContext";
 import { createStyles } from "@/helpers/styles";
+import { formatDeadline } from "@/helpers/formatDeadline";
 
 export default function HistoryPage() {
     const router = useRouter();
@@ -73,9 +74,9 @@ export default function HistoryPage() {
             <View style={styles.taskCard}>
                 <Text style={styles.taskTitle}>{item.title} - {item.difficulty}</Text>
                 {item.description !== "" && (<Text style={styles.taskDesc}>{item.description}</Text>)}
-                <Text style={styles.taskDeadline}>Deadline: {item.deadline}</Text>
-                <Text style={styles.taskDeadline}>Completion date: {item.completionDate}</Text>
-                <Text style={styles.taskTags}>Tags: {item.tags.join(', ')}</Text>
+                <Text style={styles.taskDeadline}>Deadline: {formatDeadline(item.deadline)}</Text>
+                <Text style={styles.taskDeadline}>Completion date: {formatDeadline(item.completionDate)}</Text>
+                {item.tags[0] != "" && <Text style={styles.taskTags}>Tags: {item.tags.join(', ')}</Text>}
                 <TouchableOpacity onPress={() => handleTaskRemoval(item)} style={styles.exitButton}>
                     <Text style={{ color: "red", fontSize: 16 }}>Remove</Text>
                 </TouchableOpacity>

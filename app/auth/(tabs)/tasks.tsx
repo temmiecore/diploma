@@ -6,6 +6,7 @@ import { firebase } from '@react-native-firebase/database';
 import { useRouter, useSegments } from "expo-router";
 import { useTheme } from "@/helpers/themeContext";
 import { createStyles } from "@/helpers/styles";
+import { formatDeadline } from "@/helpers/formatDeadline";
 
 export default function TasksPage() {
     const [originalTaskList, setOriginalTaskList] = useState<Task[]>([]);
@@ -104,7 +105,7 @@ export default function TasksPage() {
 
         fetchTasks();
 
-        ToastAndroid.show(`Task complete!`, ToastAndroid.SHORT); // won't work on ios
+        ToastAndroid.show(`Task complete! +${coinReward} coins.`, ToastAndroid.SHORT); // won't work on ios
     };
 
 
@@ -119,8 +120,8 @@ export default function TasksPage() {
             <View style={styles.taskCard}>
                 <Text style={styles.taskTitle}>{item.title} - {item.difficulty}</Text>
                 {item.description !== "" && (<Text style={styles.taskDesc}>{item.description}</Text>)}
-                <Text style={styles.taskDeadline}>Deadline: {item.deadline}</Text>
-                <Text style={styles.taskTags}>Tags: {item.tags.join(', ')}</Text>
+                <Text style={styles.taskDeadline}>Deadline: {formatDeadline(item.deadline)} {item.isRepeated? `| repeating every ${item.repeatInterval} days` : ""}</Text>
+                {item.tags[0] != "" && <Text style={styles.taskTags}>Tags: {item.tags.join(', ')}</Text>}
                 <TouchableOpacity
                     style={styles.button}
                     onPress={() => handleTaskCompletion(item.id)}
