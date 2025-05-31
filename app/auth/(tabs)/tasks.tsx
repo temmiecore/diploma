@@ -15,7 +15,7 @@ export default function TasksPage() {
     const [filterMenuVisible, setFilterMenuVisible] = useState(false);
     const [tagFilterMenuVisible, setTagFilterMenuVisible] = useState(false);
     const [tagFilter, setTagFilter] = useState('');
-    const [listId, setListId] = useState<number>(0);
+    const [listState, setListState] = useState(0);
 
     const { theme } = useTheme();
     const styles = createStyles(theme);
@@ -103,8 +103,6 @@ export default function TasksPage() {
 
         await database.ref(`/users/${userId}/coinAmount`).set(currentCoins + coinReward);
 
-        fetchTasks();
-
         ToastAndroid.show(`Task complete! +${coinReward} coins.`, ToastAndroid.SHORT); // won't work on ios
     };
 
@@ -120,7 +118,7 @@ export default function TasksPage() {
             <View style={styles.taskCard}>
                 <Text style={styles.taskTitle}>{item.title} - {item.difficulty}</Text>
                 {item.description !== "" && (<Text style={styles.taskDesc}>{item.description}</Text>)}
-                <Text style={styles.taskDeadline}>Deadline: {formatDeadline(item.deadline)} {item.isRepeated? `| repeating every ${item.repeatInterval} days` : ""}</Text>
+                <Text style={styles.taskDeadline}>Deadline: {formatDeadline(item.deadline)} {item.isRepeated ? `| repeating every ${item.repeatInterval} days` : ""}</Text>
                 {item.tags[0] != "" && <Text style={styles.taskTags}>Tags: {item.tags.join(', ')}</Text>}
                 <TouchableOpacity
                     style={styles.button}
@@ -132,14 +130,20 @@ export default function TasksPage() {
         );
     };
 
-
-    useEffect(() => {
+    const handleListChange = (listId: number) => {
         switch (listId) {
             case 0:
-                ////// ADD
+                setListState(0);
+                setTasks(originalTaskList.filter(task => {
+                    const date = new Date()
+                    const deadline = new Date(task.deadline);
+
+                    return deadline <= date;
+                }));
                 break;
             case 1:
-                setTasks(tasks.filter(task => {
+                setListState(1);
+                setTasks(originalTaskList.filter(task => {
                     const date = new Date()
                     const endOfWeek = new Date();
                     const deadline = new Date(task.deadline);
@@ -151,13 +155,14 @@ export default function TasksPage() {
                 }));
                 break;
             case 2:
+                setListState(2);
                 setTasks(originalTaskList);
                 break;
             default:
                 setTasks(originalTaskList);
                 break;
         }
-    }, [listId]);
+    }
 
 
     const difficultyOrder: Record<string, number> = {
@@ -209,13 +214,13 @@ export default function TasksPage() {
             </View>
 
             <View style={styles.categories}>
-                <TouchableOpacity style={styles.categoryButton} onPress={() => setListId(0)}>
+                <TouchableOpacity style={styles.categoryButton} onPress={() => handleListChange(0)}>
                     <Text style={styles.categoryButtonText}>Expired</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.categoryButton} onPress={() => setListId(1)}>
+                <TouchableOpacity style={styles.categoryButton} onPress={() => handleListChange(1)}>
                     <Text style={styles.categoryButtonText}>This Week</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.categoryButton} onPress={() => setListId(2)}>
+                <TouchableOpacity style={styles.categoryButton} onPress={() => handleListChange(2)}>
                     <Text style={styles.categoryButtonText}>All Tasks</Text>
                 </TouchableOpacity>
             </View>
