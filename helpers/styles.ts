@@ -373,4 +373,22 @@ export const createStyles = (theme: typeof lightColors) =>
       marginBottom: 10,
       fontWeight: "600",
     },
+
+    petIconWrapper: {
+        margin: 8,
+        padding: 16,
+        borderRadius: 8,
+        backgroundColor: theme.backgroundSecondary,
+        alignItems: "center",
+        justifyContent: "center",
+    },
+    petIconSelected: {
+        borderWidth: 2,
+        borderColor: theme.backgroundTertiary,
+    },
+    petIcon: {
+        width: 128,
+        height: 128,
+        resizeMode: "contain",
+    },
   });
