@@ -64,7 +64,6 @@ export default function RootLayout() {
     }, [segments]);
 
 
-
     if (initializing)
         return (
             <View

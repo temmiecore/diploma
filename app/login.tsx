@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Alert, KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import auth from "@react-native-firebase/auth";
 import { FirebaseError } from "firebase/app"
 import { useTheme } from "@/helpers/themeContext";
@@ -18,18 +18,18 @@ export default function Login() {
         }
         catch (e: any) {
             const err = e as FirebaseError;
-            alert("Registration failed: " + err.message);
+            Alert.alert("Incorrect email or password");
         }
     }
 
     const handleSignInWithGoogle = () => {
-        // do that later
+        
     }
 
     return (
         <View style={[styles.containerStretched, { paddingHorizontal: 24 }]}>
             <KeyboardAvoidingView behavior="padding" style={styles.containerInner}>
-                <Text style={[styles.title, { marginBottom: 32 }]}>Log In</Text>
+                <Text style={[styles.title, { marginBottom: 32 }]}>Sign In</Text>
                 <Text style={styles.label}>Email</Text>
                 <TextInput
                     style={[styles.input, { width: "100%" }]}

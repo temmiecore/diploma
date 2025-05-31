@@ -8,7 +8,7 @@ import { useState } from "react";
 import { FlatList, Image, KeyboardAvoidingView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 
-export default function choosePet() {
+export default function ChoosePet() {
     const [selectedPet, setSelectedPet] = useState<Pet | null>(null);
 
     const { user, updateUser } = useUserStore();

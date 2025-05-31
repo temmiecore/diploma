@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Alert, KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { useRouter } from "expo-router";
 import auth from "@react-native-firebase/auth";
 import { useUserStore } from "@/helpers/useUserStore";
@@ -28,17 +28,17 @@ export default function SignUp() {
 
     const handleNext = async () => {
         if (!emailRegex.test(email)) {
-            alert("Invalid email address!");
+            Alert.alert("Invalid email address!");
             return;
         }
 
         if (password1 !== password2) {
-            alert("Your passwords are not matching!")
+            Alert.alert("Passwords do not match!")
             return;
         }
 
         if (password1.length < 6) {
-            alert("Your password should be at least 6 characters long!")
+            Alert.alert("Password should be at least 6 characters long!")
             return;
         }
 
@@ -51,7 +51,7 @@ export default function SignUp() {
 
                 // email is already used
                 if (usersArray.find((user: any) => user.email === email)) {
-                    alert("User with this email already exists!");
+                    Alert.alert("Email is already used!");
                     return;
                 }
             }
@@ -97,6 +97,7 @@ export default function SignUp() {
                 <TextInput
                     style={[styles.input, { width: "100%" }]}
                     placeholder="**************"
+                    testID="password1"
                     value={password1}
                     onChangeText={setPassword1}
                     secureTextEntry
@@ -105,6 +106,7 @@ export default function SignUp() {
                 <TextInput
                     style={[styles.input, { width: "100%" }]}
                     placeholder="**************"
+                    testID="password2"
                     value={password2}
                     onChangeText={setPassword2}
                     secureTextEntry

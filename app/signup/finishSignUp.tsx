@@ -1,4 +1,4 @@
-import { KeyboardAvoidingView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Alert, KeyboardAvoidingView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import auth from "@react-native-firebase/auth";
 import { FirebaseError } from "firebase/app";
 import { firebase } from '@react-native-firebase/database';
@@ -7,7 +7,7 @@ import { uid } from 'uid';
 import { useTheme } from "@/helpers/themeContext";
 import { createStyles } from "@/helpers/styles";
 
-export default function finishSignUp() {
+export default function FinishSignUp() {
     const { user, updateUser } = useUserStore();
 
     const { theme } = useTheme();
@@ -59,7 +59,7 @@ export default function finishSignUp() {
         }
         catch (e: any) {
             const err = e as FirebaseError;
-            alert("Registration failed: " + err.message);
+            Alert.alert("Something went wrong: " + err.message);
         }
     };
 
