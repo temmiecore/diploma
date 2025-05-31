@@ -4,7 +4,7 @@ import auth from "@react-native-firebase/auth";
 import { firebase } from '@react-native-firebase/database';
 import { Pet } from '@/helpers/types';
 import { useRouter } from 'expo-router';
-import Animated, { useAnimatedStyle, useSharedValue, withSpring, withTiming, runOnJS, withRepeat, interpolateColor } from 'react-native-reanimated';
+import Animated, { useAnimatedStyle, useSharedValue, withSpring, withTiming, runOnJS, withRepeat, interpolateColor, withSequence } from 'react-native-reanimated';
 import { chooseIcon } from '@/helpers/pets';
 import { monsterNames, monsterSprites } from '@/helpers/monsters';
 import { useTheme } from '@/helpers/themeContext';
@@ -22,6 +22,10 @@ export default function PetBattlePage() {
 
     const { theme } = useTheme();
     const styles = createStyles(theme);
+
+    const petShake = useSharedValue(0);
+    const monsterShake = useSharedValue(0);
+    const monsterScale = useSharedValue(1);
 
     const router = useRouter();
 
@@ -101,6 +105,19 @@ export default function PetBattlePage() {
 
         setMonsterHealth(prevMonsterHealth => {
             if (prevMonsterHealth <= 0) return prevMonsterHealth;
+
+            // ANIMATIONS
+            petShake.value = withSequence(
+                withTiming(-5, { duration: 50 }),
+                withTiming(5, { duration: 50 }),
+                withTiming(0, { duration: 50 }),
+            );
+
+            monsterShake.value = withSequence(
+                withTiming(-5, { duration: 50 }),
+                withTiming(5, { duration: 50 }),
+                withTiming(0, { duration: 50 }),
+            );
 
             const totalDamage = Math.max(pet.damage + bonusDamage - monster.armor, 1);
             const newMonsterHealth = Math.max(prevMonsterHealth - totalDamage, 0);
@@ -198,7 +215,27 @@ export default function PetBattlePage() {
     const onCircleHit = () => {
         bonusDamageRef.current += 5;
         console.log("[AUTH/PETBATTLE] BonusDamageRef ", bonusDamageRef.current);
+
+
+        monsterScale.value = withSequence(
+            withTiming(0.8, { duration: 100 }),
+            withTiming(1, { duration: 100 }),
+        );
     };
+
+    const petAnimatedStyle = useAnimatedStyle(() => ({
+        transform: [
+            { translateX: petShake.value },
+        ],
+    }));
+
+    const monsterAnimatedStyle = useAnimatedStyle(() => ({
+        transform: [
+            { translateX: monsterShake.value },
+            { scale: monsterScale.value },
+        ],
+    }));
+
 
     return (
         <Animated.View style={[{ flex: 1, padding: 32 }, animatedColors]}>
@@ -210,7 +247,11 @@ export default function PetBattlePage() {
 
                 <View style={{ alignItems: 'center' }}>
                     <View style={styles.ovalShadow} />
-                    <Image source={monster?.sprite} style={{ width: 160, height: 160 }} />
+                    <Animated.Image
+                        source={monster?.sprite}
+                        style={[{ width: 160, height: 160 }, monsterAnimatedStyle]}
+                    />
+
                 </View>
             </View>
 
@@ -219,7 +260,10 @@ export default function PetBattlePage() {
             <View style={{ flexDirection: 'row', alignItems: 'flex-end', marginBottom: 128 }}>
                 <View style={{ alignItems: 'center' }}>
                     <View style={styles.ovalShadow} />
-                    <Image source={chooseIcon(pet?.type)} style={{ width: 160, height: 160 }} />
+                    <Animated.Image
+                        source={chooseIcon(pet?.type)}
+                        style={[{ width: 160, height: 160 }, petAnimatedStyle]}
+                    />
                 </View>
 
                 <View style={{ marginLeft: 12, backgroundColor: '#fff', padding: 8, borderRadius: 8 }}>
@@ -307,8 +351,10 @@ function AttackPoint({ onCircleHit, onExpired }: { onCircleHit: () => void; onEx
     }, []);
 
     const animatedStyle = useAnimatedStyle(() => ({
-        scaleX: radius.value,
-        scaleY: radius.value,
+        transform: [
+            { scaleX: radius.value },
+            { scaleY: radius.value },
+        ],
     }));
 
     return (
@@ -318,30 +364,26 @@ function AttackPoint({ onCircleHit, onExpired }: { onCircleHit: () => void; onEx
                     position: 'absolute',
                     top: y,
                     left: x,
-                    borderRadius: 50,
                     width: 80,
                     height: 80,
-                    borderWidth: 3,
-                    borderColor: 'blue',
                     justifyContent: 'center',
                     alignItems: 'center',
-                    backgroundColor: 'rgba(0,0,255,0.2)',
                 },
                 animatedStyle,
             ]}
         >
             <TouchableOpacity
-                style={{
-                    width: '100%',
-                    height: '100%',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                }}
+                style={{ width: '100%', height: '100%' }}
                 onPress={() => {
                     onCircleHit();
                     onExpired(); // remove after hit
                 }}
+                activeOpacity={0.7}
             >
+                <Image
+                    source={require('@/assets/images/target.png')}
+                    style={{ width: '100%', height: '100%', resizeMode: 'contain' }}
+                />
             </TouchableOpacity>
         </Animated.View>
     );
