@@ -8,24 +8,29 @@ export const foodItems = [
 ];
 
 export const vanityItems = [
-    { id: 'hat_red', name: 'Red Hat', type: 'vanity', price: 50 },
-    { id: 'glasses_sun', name: 'Sunglasses', type: 'vanity', price: 75 },
+    { id: 'clover', name: 'Lucky Clover', type: 'vanity', price: 30 },
+    { id: 'glasses', name: 'Sunglasses', type: 'vanity', price: 40 },
+    { id: 'leather_armor', name: 'Leather Armor', type: 'vanity', price: 50 },
+    { id: 'ring', name: 'Magic Ring', type: 'vanity', price: 60 },
+    { id: 'hp_potion', name: 'Health Potion', type: 'vanity', price: 20 },
+    { id: 'iron_armor', name: 'Iron Armor', type: 'vanity', price: 85 },
+    { id: 'wrong_id', name: 'Placeholder', type: 'vanity', price: 999 },
 ];
 
-// oof
-export const chooseItemSprite = (id: string) => {
-    switch (id) {
-        case "peas":
-            return require("@/assets/images/items/peas.png");
-        case "carrot":
-            return require("@/assets/images/items/carrot.png");
-        case "tomato":
-            return require("@/assets/images/items/tomato.png");
-        case "chili_pepper":
-            return require("@/assets/images/items/chili_pepper.png");
-        case "corn":
-            return require("@/assets/images/items/corn.png");
-        case "purple_cabbage":
-            return require("@/assets/images/items/purple_cabbage.png");
-    }
+const itemSprites: Record<string, any> = {
+  peas: require("@/assets/images/items/peas.png"),
+  carrot: require("@/assets/images/items/carrot.png"),
+  tomato: require("@/assets/images/items/tomato.png"),
+  chili_pepper: require("@/assets/images/items/chili_pepper.png"),
+  corn: require("@/assets/images/items/corn.png"),
+  purple_cabbage: require("@/assets/images/items/purple_cabbage.png"),
+  clover: require("@/assets/images/items/clover.png"),
+  glasses: require("@/assets/images/items/glasses.png"),
+  leather_armor: require("@/assets/images/items/leather_armor.png"),
+  ring: require("@/assets/images/items/ring.png"),
+  hp_potion: require("@/assets/images/items/hp_potion.png"),
+  iron_armor: require("@/assets/images/items/iron_armor.png"),
 };
+
+export const chooseItemSprite = (id: string) => 
+  itemSprites[id] || require("@/assets/images/items/placeholder.png");
