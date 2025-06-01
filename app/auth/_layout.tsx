@@ -1,5 +1,5 @@
-import { Stack, Tabs } from 'expo-router';
-import { Image, StyleSheet } from 'react-native';
+import { Stack, Tabs } from "expo-router";
+import { Image, StyleSheet } from "react-native";
 
 export default function AuthLayout() {
     return (

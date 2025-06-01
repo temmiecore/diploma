@@ -44,8 +44,24 @@ export default function AddTaskPage() {
     const handleAddTask = async () => {
         const userId = auth().currentUser?.uid;
 
+        if (title === "") {
+            ToastAndroid.show("Title cannot be empty!", ToastAndroid.SHORT);
+            return;
+        }
+
+        if (deadline < new Date()) {
+            ToastAndroid.show("Deadline cannot be in the past!", ToastAndroid.SHORT);
+            return;
+        }
+
+        const repeatIntervalNum = parseInt(repeatInterval);
+        if (isRepeated && (isNaN(repeatIntervalNum) || repeatIntervalNum < 0)) {
+            ToastAndroid.show("Repeat interval must be a non-negative number!", ToastAndroid.SHORT);
+            return;
+        }
+
         const taskId: string = uid();
-        
+
         try {
             await database.ref(`/users/${userId}/tasks/${taskId}`).set({
                 id: taskId,
@@ -77,7 +93,7 @@ export default function AddTaskPage() {
                 <Text style={styles.title}>Add a task</Text>
 
                 <Text style={styles.label}>Title</Text>
-                <TextInput style={styles.input} value={title} onChangeText={setTitle} />
+                <TextInput style={styles.input} value={title} onChangeText={setTitle} testID="title" />
 
                 <Text style={styles.label}>Description (optional)</Text>
                 <TextInput
@@ -108,6 +124,18 @@ export default function AddTaskPage() {
                     />
                 )}
 
+                {__DEV__ && (
+                    <TextInput
+                        testID="deadlineInput"
+                        style={{ height: 0, width: 0 }}
+                        value={deadline.toISOString()}
+                        onChangeText={(text) => {
+                            const parsed = new Date(text);
+                            if (!isNaN(parsed.getTime())) setDeadline(parsed);
+                        }}
+                    />
+                )}
+
                 <Text style={styles.label}>Tags (Comma separated. No spaces!)</Text>
                 <TextInput style={styles.input} value={tags} onChangeText={setTags} />
 
@@ -129,11 +157,11 @@ export default function AddTaskPage() {
 
                 <View style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
                     <Text style={styles.label}>Is it repeatable?</Text>
-                    <Switch value={isRepeated} onValueChange={setIsRepeated} />
+                    <Switch value={isRepeated} onValueChange={setIsRepeated} testID="isRepeated"/>
                 </View>
 
                 <Text style={styles.label}>Repeat Interval</Text>
-                <TextInput style={styles.input} value={repeatInterval} onChangeText={setRepeatInterval} keyboardType="numeric" />
+                <TextInput style={styles.input} value={repeatInterval} onChangeText={setRepeatInterval} keyboardType="numeric" testID="repeatInterval" />
 
                 <TouchableOpacity onPress={handleAddTask} style={styles.button}>
                     <Text>Add Task</Text>

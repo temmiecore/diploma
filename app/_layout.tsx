@@ -32,11 +32,11 @@ export default function RootLayout() {
 
         if (user) {
             if (!inAuthGroup) {
-                router.replace('/auth/(tabs)/home');
+                router.replace("/auth/(tabs)/home");
             }
         } else {
             if (inAuthGroup) {
-                router.replace('/');
+                router.replace("/");
             }
         }
 
@@ -45,7 +45,7 @@ export default function RootLayout() {
 
     useEffect(() => {
         const backAction = () => {
-            const inAuthGroup = segments[0] === 'auth';
+            const inAuthGroup = segments[0] === "auth";
 
             if (inAuthGroup)
                 return true;
@@ -55,7 +55,7 @@ export default function RootLayout() {
         };
 
         const backHandler = BackHandler.addEventListener(
-            'hardwareBackPress',
+            "hardwareBackPress",
             backAction
         );
         console.log(segments);
@@ -68,8 +68,8 @@ export default function RootLayout() {
         return (
             <View
                 style={{
-                    alignItems: 'center',
-                    justifyContent: 'center',
+                    alignItems: "center",
+                    justifyContent: "center",
                     flex: 1,
                 }}>
                 <ActivityIndicator size="large" />
