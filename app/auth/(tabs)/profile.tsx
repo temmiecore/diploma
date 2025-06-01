@@ -73,35 +73,35 @@ export default function ProfilePage() {
         const reference = database.ref(`/users/${userId}`);
 
         // email change
-        if (email !== "" && email !== user?.email) {
-            if (!emailRegex.test(email)) {
-                alert("Invalid email address!");
-                return;
-            }
+        // if (email !== "" && email !== user?.email) {
+        //     if (!emailRegex.test(email)) {
+        //         alert("Invalid email address!");
+        //         return;
+        //     }
 
-            const snapshot = await database.ref("/users").once("value");
-            const usersObj = snapshot.val();
+        //     const snapshot = await database.ref("/users").once("value");
+        //     const usersObj = snapshot.val();
 
-            if (usersObj) {
-                const usersArray = Object.values(usersObj);
+        //     if (usersObj) {
+        //         const usersArray = Object.values(usersObj);
 
-                // email is already used
-                if (usersArray.find((user: any) => user.email === email)) {
-                    alert("User with this email already exists!");
-                    return;
-                }
-            }
+        //         // email is already used
+        //         if (usersArray.find((user: any) => user.email === email)) {
+        //             alert("User with this email already exists!");
+        //             return;
+        //         }
+        //     }
 
-            try {
-                await auth().signInWithEmailAndPassword(email, currentPassword);
-                await auth().currentUser?.updateEmail(email);
-                editedUser = { ...editedUser, email: email };
-            } catch (error: any) {
-                console.error("Error updating email:", error);
-                alert("Failed to update email. Please try again.");
-                return;
-            }
-        }
+        //     try {
+        //         await auth().signInWithEmailAndPassword(email, currentPassword);
+        //         await auth().currentUser?.updateEmail(email);
+        //         editedUser = { ...editedUser, email: email };
+        //     } catch (error: any) {
+        //         console.error("Error updating email:", error);
+        //         alert("Failed to update email. Please try again.");
+        //         return;
+        //     }
+        // }
 
         reference.set(editedUser);
 

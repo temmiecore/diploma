@@ -3,7 +3,6 @@ import { render, fireEvent, waitFor } from "@testing-library/react-native";
 import AddTaskPage from "@/app/auth/addTask";
 import { ToastAndroid } from "react-native";
 
-
 // Mock Firebase auth and database so it can actually run
 jest.mock("@react-native-firebase/auth", () => () => ({
     currentUser: {
