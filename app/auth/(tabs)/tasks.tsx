@@ -145,13 +145,16 @@ export default function TasksPage() {
                 setListState(1);
                 setTasks(originalTaskList.filter(task => {
                     const date = new Date()
+                    const startOfWeek = new Date();
                     const endOfWeek = new Date();
                     const deadline = new Date(task.deadline);
 
-                    endOfWeek.setDate(date.getDate() + (7 - date.getDay()));
+                    startOfWeek.setDate(date.getDate() - date.getDay());
+                    startOfWeek.setHours(0, 0, 0, 0);
+                    endOfWeek.setDate(date.getDate() + (6 - date.getDay()));
                     endOfWeek.setHours(23, 59, 59, 999);
 
-                    return deadline <= endOfWeek;
+                    return (deadline >= startOfWeek) && (deadline <= endOfWeek);
                 }));
                 break;
             case 2:
