@@ -2,7 +2,7 @@ import { Alert, KeyboardAvoidingView, StyleSheet, Text, TouchableOpacity, View }
 import auth from "@react-native-firebase/auth";
 import { FirebaseError } from "firebase/app";
 import { firebase } from '@react-native-firebase/database';
-import { useUserStore } from "@/helpers/useUserStore";
+import { useUserStore } from "@/helpers/hooks/useUserStore";
 import { uid } from 'uid';
 import { useTheme } from "@/helpers/themeContext";
 import { createStyles } from "@/helpers/styles";

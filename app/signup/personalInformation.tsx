@@ -2,7 +2,7 @@ import { useState } from "react";
 import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { Picker } from '@react-native-picker/picker';
 import { useRouter } from "expo-router";
-import { useUserStore } from "@/helpers/useUserStore";
+import { useUserStore } from "@/helpers/hooks/useUserStore";
 import { useTheme } from "@/helpers/themeContext";
 import { createStyles } from "@/helpers/styles";
 

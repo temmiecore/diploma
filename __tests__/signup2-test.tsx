@@ -29,7 +29,7 @@ jest.mock("@react-native-firebase/auth", () => {
 });
 
 // mock user
-jest.mock("@/helpers/useUserStore", () => ({
+jest.mock("@/helpers/hooks/useUserStore", () => ({
     useUserStore: () => ({
         user: {
             email: "test@example.com",

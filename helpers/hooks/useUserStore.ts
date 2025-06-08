@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { Pet, User } from './types';
+import { Pet, User } from '../types';
 
 interface UserStore {
   user: Partial<User> | null;

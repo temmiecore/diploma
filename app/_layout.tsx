@@ -3,8 +3,12 @@ import { useEffect, useState } from "react";
 import auth, { FirebaseAuthTypes } from "@react-native-firebase/auth";
 import { ActivityIndicator, BackHandler, View } from "react-native";
 import { ThemeProvider } from "@/helpers/themeContext";
+import { usePushNotifications } from "@/helpers/hooks/usePushNotifications";
 
 export default function RootLayout() {
+    // Notifications
+    const {expoPushToken, notification} = usePushNotifications();
+
     // Set an initializing state whilst Firebase connects
     const [initializing, setInitializing] = useState(true);
     const [user, setUser] = useState<FirebaseAuthTypes.User | null>();

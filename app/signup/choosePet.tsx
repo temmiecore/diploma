@@ -2,7 +2,7 @@ import { chooseIcon, pets } from "@/helpers/pets";
 import { createStyles } from "@/helpers/styles";
 import { useTheme } from "@/helpers/themeContext";
 import { Pet } from "@/helpers/types";
-import { useUserStore } from "@/helpers/useUserStore";
+import { useUserStore } from "@/helpers/hooks/useUserStore";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { FlatList, Image, KeyboardAvoidingView, StyleSheet, Text, TouchableOpacity, View } from "react-native";

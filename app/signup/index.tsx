@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Alert, KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { useRouter } from "expo-router";
 import auth from "@react-native-firebase/auth";
-import { useUserStore } from "@/helpers/useUserStore";
+import { useUserStore } from "@/helpers/hooks/useUserStore";
 import { User } from "@/helpers/types";
 import { firebase } from '@react-native-firebase/database';
 import { useTheme } from "@/helpers/themeContext";

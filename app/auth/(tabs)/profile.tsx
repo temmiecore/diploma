@@ -6,6 +6,7 @@ import { Picker } from "@react-native-picker/picker";
 import { User } from "@/helpers/types";
 import { useTheme } from "@/helpers/themeContext";
 import { createStyles } from "@/helpers/styles";
+import { scheduleDailyNotification } from "@/helpers/schedulePushNotification";
 
 export default function ProfilePage() {
     const { darkMode, setDarkMode, theme } = useTheme();
@@ -59,6 +60,11 @@ export default function ProfilePage() {
     const handleImageChange = () => {
         // Open image picker here
     };
+
+    const turnOnNotifications = async () => {
+        scheduleDailyNotification();
+        ToastAndroid.show(`Notifications turned on!`, ToastAndroid.SHORT);
+    }
 
     const handleSaveChanges = async () => {
         let editedUser = {
@@ -188,6 +194,10 @@ export default function ProfilePage() {
                         onValueChange={setDarkMode}
                     />
                 </View>
+
+                <TouchableOpacity style={[styles.buyButton, { width: "100%" }]} onPress={turnOnNotifications}>
+                    <Text style={styles.buttonText}>Turn On Notifications</Text>
+                </TouchableOpacity>
 
                 <TouchableOpacity style={[styles.signOutButton, { width: "100%" }]} onPress={signOut}>
                     <Text style={styles.buttonText}>Sign Out</Text>
